@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">Login</string>
+    <string name="profile_name_text">Name</string>
+    <string name="profile_name_hint">  Enter Your Name</string>
+    <string name="profile_gender">Gender</string>
+    <string name="profile_age">Age</string>
+    <string name="profile_weight">Weight</string>
+    <string name="profile_weight_gm">Gm</string>
+    <string name="profile_doctor_name">Doctor Name(optional)</string>
+    <string name="profile_enter_doctor_name">Enter Doctor Name</string>
+    <string name="profile_weight_kg">Kg</string>
+    <string name="profile_weight_description">Weight will upto 500kg and 999gm </string>
+    <string name="profile_height">Height</string>
+    <string name="profile_enter_email_adderss">Enter Email Address</string>
+    <string name="profile_text_size">16sp</string>
+    <string name="profile_height_feet">Feet</string>
+    <string name="profile_height_inches">Inches</string>
+    <string name="profile_email_address">Email Address(optional)</string>
+    <string name="profile_height_description">Height will be upto 10 feet and 11 inches </string>
+    <string name="profile_age_hint">  Enter Your Age</string>
+    <string name="link">
+        <a href="http:///wwww.google.com">Forget Password?</a>
+    </string>
+    <string name="link2">
+        <a href="">sign up</a>
+    </string>
+    <string name="link3">
+        <a href="">log in </a>
+    </string>
+<!--    <string-array name="spiner_items">-->
+<!--        <item>Male</item>-->
+<!--        <item>Female</item>-->
+<!--        <item>Other's</item>-->
+<!--    </string-array>-->
+
+</resources>
