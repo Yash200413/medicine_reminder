@@ -9,14 +9,14 @@
     <string name="profile_doctor_name">Doctor Name(optional)</string>
     <string name="profile_enter_doctor_name">Enter Doctor Name</string>
     <string name="profile_weight_kg">Kg</string>
-    <string name="profile_weight_description">Weight will upto 500kg and 999gm </string>
+    <string name="profile_weight_description">Weight will up to 500kg and 999gm </string>
     <string name="profile_height">Height</string>
     <string name="profile_enter_email_adderss">Enter Email Address</string>
-    <string name="profile_text_size">16sp</string>
+    <dimen name="profile_text_size">16sp</dimen>
     <string name="profile_height_feet">Feet</string>
     <string name="profile_height_inches">Inches</string>
     <string name="profile_email_address">Email Address(optional)</string>
-    <string name="profile_height_description">Height will be upto 10 feet and 11 inches </string>
+    <string name="profile_height_description">Height will be up to 10 feet and 11 inches </string>
     <string name="profile_age_hint">  Enter Your Age</string>
     <string name="link">
         <a href="http:///wwww.google.com">Forget Password?</a>
