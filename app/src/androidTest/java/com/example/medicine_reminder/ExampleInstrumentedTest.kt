@@ -1,4 +1,4 @@
-package com.example.loginpage
+package com.example.medicine_reminder
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

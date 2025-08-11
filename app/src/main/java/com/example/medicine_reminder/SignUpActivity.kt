@@ -1,12 +1,12 @@
-package com.example.loginpage
+package com.example.medicine_reminder
 
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.example.loginpage.model.SignUpRequest
-import com.example.loginpage.model.SignUpResponse
-import com.example.loginpage.retrofit.RetrofitClient
+import com.example.medicine_reminder.model.SignUpRequest
+import com.example.medicine_reminder.model.SignUpResponse
+import com.example.medicine_reminder.retrofit.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

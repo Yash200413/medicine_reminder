@@ -1,4 +1,4 @@
-package com.example.loginpage.model
+package com.example.medicine_reminder.model
 
 class SignUpResponse(
     var success: String,

@@ -1,6 +1,6 @@
-package com.example.loginpage.retrofit
+package com.example.medicine_reminder.retrofit
 
-import com.example.loginpage.api.ApiService
+import com.example.medicine_reminder.api.ApiService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

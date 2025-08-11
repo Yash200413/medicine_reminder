@@ -1,17 +1,17 @@
-package com.example.loginpage
+package com.example.medicine_reminder
 
 import android.content.Intent
 import android.os.Bundle
-import android.provider.ContactsContract.Intents
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.loginpage.model.LoginRequest
-import com.example.loginpage.model.LoginResponse
-import com.example.loginpage.retrofit.RetrofitClient
+import com.example.loginpage.R
+import com.example.medicine_reminder.model.LoginRequest
+import com.example.medicine_reminder.model.LoginResponse
+import com.example.medicine_reminder.retrofit.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
                     if (response.isSuccessful && response.body() != null) {
 //                        val message = response.body()?.message ?: "Login success"
 //                        Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
-                        Intent(this@MainActivity,home::class.java).also{
+                        Intent(this@MainActivity,UserDetails::class.java).also{
                             startActivity(it)
                         }
                         finish()

@@ -1,9 +1,9 @@
-package com.example.loginpage.api
+package com.example.medicine_reminder.api
 
-import com.example.loginpage.model.LoginRequest
-import com.example.loginpage.model.LoginResponse
-import com.example.loginpage.model.SignUpRequest
-import com.example.loginpage.model.SignUpResponse
+import com.example.medicine_reminder.model.LoginRequest
+import com.example.medicine_reminder.model.LoginResponse
+import com.example.medicine_reminder.model.SignUpRequest
+import com.example.medicine_reminder.model.SignUpResponse
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST

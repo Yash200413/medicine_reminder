@@ -1,4 +1,4 @@
-package com.example.loginpage
+package com.example.medicine_reminder
 
 import org.junit.Test
 
