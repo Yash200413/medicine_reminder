@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.example.loginpage" />
-                  <option name="mobileSdkAppId" value="1:380393401045:android:3d69dab374f7ab2e64505c" />
-                  <option name="projectId" value="medicine-reminder-57b43" />
-                  <option name="projectNumber" value="380393401045" />
+                  <option name="appId" value="PLACEHOLDER" />
+                  <option name="mobileSdkAppId" value="" />
+                  <option name="projectId" value="" />
+                  <option name="projectNumber" value="" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
