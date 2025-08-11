@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.example.loginpage.R
 import com.example.medicine_reminder.model.SignUpRequest
 import com.example.medicine_reminder.model.SignUpResponse
 import com.example.medicine_reminder.retrofit.RetrofitClient
@@ -51,10 +52,9 @@ class SignUpActivity : AppCompatActivity() {
             RetrofitClient.api.signUp(request).enqueue(object : Callback<SignUpResponse> {
                 override fun onResponse(call: Call<SignUpResponse>, response: Response<SignUpResponse>) {
                     if (response.isSuccessful && response.body() != null) {
-                        val success = response.body()?.success ?: "Yes"
-                        val message = response.body()?.message ?: "SignUp success"
+                        val message = response.body()?.message ?: "User registered successfully"
                         Toast.makeText(this@SignUpActivity, message, Toast.LENGTH_LONG).show()
-                        if (success=="Yes") {
+                        if (message=="User registered successfully") {
                             finish() // Optionally go back to login
                         }
                     } else {
