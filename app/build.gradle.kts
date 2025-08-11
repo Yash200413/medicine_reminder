@@ -9,7 +9,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.loginpage"
+        applicationId = "com.example.medicine_reminder"
         minSdk = 26
         targetSdk = 36
         versionCode = 1

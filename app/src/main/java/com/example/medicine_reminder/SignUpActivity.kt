@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.example.loginpage.R
 import com.example.medicine_reminder.model.SignUpRequest
 import com.example.medicine_reminder.model.SignUpResponse
 import com.example.medicine_reminder.retrofit.RetrofitClient

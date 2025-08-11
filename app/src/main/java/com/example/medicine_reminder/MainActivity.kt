@@ -8,7 +8,6 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.loginpage.R
 import com.example.medicine_reminder.model.LoginRequest
 import com.example.medicine_reminder.model.LoginResponse
 import com.example.medicine_reminder.retrofit.RetrofitClient
