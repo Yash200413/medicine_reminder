@@ -49,21 +49,29 @@ class SignUpActivity : AppCompatActivity() {
             val request = SignUpRequest(username, email, phone, password)
 
             RetrofitClient.api.signUp(request).enqueue(object : Callback<SignUpResponse> {
-                override fun onResponse(call: Call<SignUpResponse>, response: Response<SignUpResponse>) {
-                    if (response.isSuccessful && response.body() != null) {
+                override fun onResponse(
+                    call: Call<SignUpResponse>,
+                    response: Response<SignUpResponse>
+                ) {
+                    if (response.isSuccessful) {
                         val message = response.body()?.message ?: "User registered successfully"
                         Toast.makeText(this@SignUpActivity, message, Toast.LENGTH_LONG).show()
-                        if (message=="User registered successfully") {
+                        if (message == "User registered successfully") {
                             finish() // Optionally go back to login
                         }
                     } else {
-                        Toast.makeText(this@SignUpActivity, "Signup failed", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@SignUpActivity, "Signup failed", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
 
                 override fun onFailure(call: Call<SignUpResponse>, t: Throwable) {
                     Log.e("SignUpError", "API call failed", t)
-                    Toast.makeText(this@SignUpActivity, "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@SignUpActivity,
+                        "Network error: ${t.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             })
         }

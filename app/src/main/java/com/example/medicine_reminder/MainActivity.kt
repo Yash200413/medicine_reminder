@@ -23,10 +23,10 @@ class MainActivity : AppCompatActivity() {
         val usernameInput = findViewById<EditText>(R.id.usernameInput)
         val passwordInput = findViewById<EditText>(R.id.passwordInput)
         val loginButton = findViewById<Button>(R.id.loginButton)
-        signUp.setOnClickListener{
-           Intent(this@MainActivity,SignUpActivity::class.java).also{
-               startActivity(it)
-           }
+        signUp.setOnClickListener {
+            Intent(this@MainActivity, SignUpActivity::class.java).also {
+                startActivity(it)
+            }
 
         }
         loginButton.setOnClickListener {
@@ -34,29 +34,38 @@ class MainActivity : AppCompatActivity() {
             val password = passwordInput.text.toString()
 
             if (email.isBlank() || password.isBlank()) {
-                Toast.makeText(this, "Please enter both email and password", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Please enter both email and password", Toast.LENGTH_SHORT)
+                    .show()
                 return@setOnClickListener
             }
 
             val request = LoginRequest(email, password)
 
             RetrofitClient.api.login(request).enqueue(object : Callback<LoginResponse> {
-                override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                override fun onResponse(
+                    call: Call<LoginResponse>,
+                    response: Response<LoginResponse>
+                ) {
                     if (response.isSuccessful && response.body() != null) {
 //                        val message = response.body()?.message ?: "Login success"
 //                        Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
-                        Intent(this@MainActivity,UserDetails::class.java).also{
+                        Intent(this@MainActivity, UserDetails::class.java).also {
                             startActivity(it)
                         }
                         finish()
                     } else {
-                        Toast.makeText(this@MainActivity, "Invalid credentials", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@MainActivity, "Invalid credentials", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
 
                 override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                     Log.e("LoginError", "Network error", t)
-                    Toast.makeText(this@MainActivity, "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Network error: ${t.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
 
                 }
             })

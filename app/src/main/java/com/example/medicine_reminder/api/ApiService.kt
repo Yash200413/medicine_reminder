@@ -11,6 +11,7 @@ import retrofit2.http.POST
 interface ApiService {
     @POST("/api/auth/login")
     fun login(@Body request: LoginRequest): Call<LoginResponse>
+
     @POST("/api/auth/signup")
-fun signUp(@Body request: SignUpRequest): Call<SignUpResponse>
+    fun signUp(@Body request: SignUpRequest): Call<SignUpResponse>
 }

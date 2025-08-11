@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Login</string>
+    <string name="app_name">Medicine_reminder</string>
     <string name="profile_name_text">Name</string>
     <string name="profile_name_hint">  Enter Your Name</string>
     <string name="profile_gender">Gender</string>
@@ -27,10 +27,10 @@
     <string name="link3">
         <a href="">log in </a>
     </string>
-<!--    <string-array name="spiner_items">-->
-<!--        <item>Male</item>-->
-<!--        <item>Female</item>-->
-<!--        <item>Other's</item>-->
-<!--    </string-array>-->
+    <!--    <string-array name="spiner_items">-->
+    <!--        <item>Male</item>-->
+    <!--        <item>Female</item>-->
+    <!--        <item>Other's</item>-->
+    <!--    </string-array>-->
 
 </resources>
