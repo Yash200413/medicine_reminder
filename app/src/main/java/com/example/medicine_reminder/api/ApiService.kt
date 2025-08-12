@@ -14,4 +14,7 @@ interface ApiService {
 
     @POST("/api/auth/signup")
     fun signUp(@Body request: SignUpRequest): Call<SignUpResponse>
+
+    @POST("/api/auth/google")
+    fun googleLogin(@Body request: GoogleLoginRequest): Call<LoginResponse>
 }
