@@ -1,5 +1,6 @@
 package com.example.medicine_reminder.api
 
+import com.example.medicine_reminder.model.GoogleLoginRequest
 import com.example.medicine_reminder.model.LoginRequest
 import com.example.medicine_reminder.model.LoginResponse
 import com.example.medicine_reminder.model.SignUpRequest
