@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "log in page"
+rootProject.name = "Medicine Reminder"
 include(":app")
  

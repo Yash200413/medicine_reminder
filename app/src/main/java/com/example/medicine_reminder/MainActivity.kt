@@ -8,6 +8,8 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.Composable
+import com.example.medicine_reminder.model.GoogleLoginRequest
 import com.example.medicine_reminder.model.LoginRequest
 import com.example.medicine_reminder.model.LoginResponse
 import com.example.medicine_reminder.retrofit.RetrofitClient
@@ -114,7 +116,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun verifyGoogleToken(idToken: String) {
         // Assuming your backend has /auth/google endpoint
-        RetrofitClient.api.googleLogin(idToken).enqueue(object : Callback<LoginResponse> {
+        val request = GoogleLoginRequest(idToken)
+        RetrofitClient.api.googleLogin(request).enqueue(object : Callback<LoginResponse> {
             override fun onResponse(
                 call: Call<LoginResponse>,
                 response: Response<LoginResponse>
