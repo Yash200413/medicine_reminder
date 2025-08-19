@@ -30,6 +30,8 @@
     <string name="link3">
         <a href="">log in </a>
     </string>
+    <string name="title_activity_otp_verfication">OtpVerfication</string>
+    <string name="title_activity_forget_password_page">ForgetPasswordPage</string>
     <!--    <string-array name="spiner_items">-->
     <!--        <item>Male</item>-->
     <!--        <item>Female</item>-->

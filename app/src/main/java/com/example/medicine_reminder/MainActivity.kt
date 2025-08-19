@@ -37,7 +37,14 @@ class MainActivity : AppCompatActivity() {
         val passwordInput = findViewById<EditText>(R.id.passwordInput)
         val loginButton = findViewById<Button>(R.id.loginButton)
         val googleButton = findViewById<Button>(R.id.googleButton)
+        val facebookButton = findViewById<Button>(R.id.facebookButton)
 
+        facebookButton.setOnClickListener {
+            Toast.makeText(this, "Opening OTP Screen...", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, OtpVerification::class.java)
+            intent.putExtra("email", "test@example.com")
+            startActivity(intent)
+        }
         // Google Sign-In configuration
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id)) // from strings.xml

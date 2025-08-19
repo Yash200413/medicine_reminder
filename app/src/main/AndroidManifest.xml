@@ -15,13 +15,23 @@
         android:theme="@style/Theme.LogInPage"
         android:usesCleartextTraffic="true">
         <activity
-            android:name="com.example.medicine_reminder.UserDetails"
+            android:name=".ForgetPasswordPage"
+            android:exported="false"
+            android:label="@string/title_activity_forget_password_page"
+            android:theme="@style/Theme.LogInPage" />
+        <activity
+            android:name=".OtpVerification"
+            android:exported="false"
+            android:label="@string/title_activity_otp_verfication"
+            android:theme="@style/Theme.LogInPage" />
+        <activity
+            android:name=".UserDetails"
             android:exported="false" />
         <activity
-            android:name="com.example.medicine_reminder.SignUpActivity"
+            android:name=".SignUpActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.medicine_reminder.MainActivity"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
