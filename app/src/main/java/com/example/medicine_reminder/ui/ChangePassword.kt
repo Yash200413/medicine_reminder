@@ -10,11 +10,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.medicine_reminder.uicomponents.TopRoundedBackButtonCircle
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,6 +37,7 @@ fun ChangePasswordScreen(
             .displayCutoutPadding()
             .background(MaterialTheme.colorScheme.primary),
         topBar = {
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -51,14 +55,45 @@ fun ChangePasswordScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(20.dp),
-            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Text(
+                    text = "Reset Password",
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+
+             Row(
+                 modifier = Modifier
+                     .fillMaxWidth()
+                     .padding(30.dp),
+                 horizontalArrangement = Arrangement.Center,
+                 verticalAlignment = Alignment.CenterVertically
+             ){
+                Text(
+                    text = "Create a new password for your account. "+
+                            "Password must be 8 character in length"
+                )
+            }
+
+
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = "New Password"
+            )
+
             // New password
-            OutlinedTextField(
+            TextField(
                 value = newPassword,
                 onValueChange = { newPassword = it },
-                label = { Text("New Password") },
                 visualTransformation = if (showNewPassword) VisualTransformation.None else PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 trailingIcon = {
@@ -69,16 +104,24 @@ fun ChangePasswordScreen(
                         )
                     }
                 },
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent),
                 modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = "Confirm Password"
+            )
+
             // Confirm new password
-            OutlinedTextField(
+            TextField(
                 value = confirmPassword,
                 onValueChange = { confirmPassword = it },
-                label = { Text("Confirm Password") },
                 visualTransformation = if (showConfirmPassword) VisualTransformation.None else PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 trailingIcon = {
@@ -89,6 +132,10 @@ fun ChangePasswordScreen(
                         )
                     }
                 },
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent),
                 modifier = Modifier.fillMaxWidth()
             )
 

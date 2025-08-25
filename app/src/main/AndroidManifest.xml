@@ -15,14 +15,35 @@
         android:theme="@style/Theme.LogInPage"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".HomeActivity"
+            android:exported="false"
+            android:label="@string/title_activity_home"
+            android:theme="@style/Theme.LogInPage" />
+        <activity
+            android:name=".OtpVerificationActivity"
+            android:exported="false"
+            android:label="@string/title_activity_otp_verification"
+            android:theme="@style/Theme.LogInPage" />
+        <activity
+            android:name=".ChangePasswordActivity"
+            android:exported="false"
+            android:label="@string/title_activity_change_password"
+            android:theme="@style/Theme.LogInPage" />
+        <activity
+            android:name=".LoginPageActivity"
+            android:exported="true"
+            android:label="@string/title_activity_login_page"
+            android:theme="@style/Theme.LogInPage">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".ForgetPasswordPage"
             android:exported="false"
             android:label="@string/title_activity_forget_password_page"
-            android:theme="@style/Theme.LogInPage" />
-        <activity
-            android:name=".OtpVerification"
-            android:exported="false"
-            android:label="@string/title_activity_otp_verfication"
             android:theme="@style/Theme.LogInPage" />
         <activity
             android:name=".UserDetails"
@@ -32,13 +53,7 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="false" />
 
         <meta-data
             android:name="preloaded_fonts"

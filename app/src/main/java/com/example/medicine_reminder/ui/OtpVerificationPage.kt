@@ -19,7 +19,8 @@ import com.example.medicine_reminder.uicomponents.TopRoundedBackButtonCircle
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OtpVerificationPage(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onVerifyClick: (String) -> Unit
 ) {
     var otpValues by remember { mutableStateOf(List(4) { "" }) }
     Scaffold(
@@ -59,7 +60,7 @@ fun OtpVerificationPage(
 
             Row(
                 modifier = Modifier
-                    .padding(2.dp)
+                    .padding(12.dp)
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -104,7 +105,7 @@ fun OtpVerificationPage(
                         ),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
-                    Spacer( modifier = Modifier.width(10.dp))
+                    if(index < 3) Spacer( modifier = Modifier.width(10.dp))
                 }
             }
 
@@ -113,7 +114,7 @@ fun OtpVerificationPage(
             Button(
                 onClick = {
                     val otp = otpValues.joinToString("")
-                    // TODO: Call backend API with otp
+                    onVerifyClick(otp)
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -126,6 +127,7 @@ fun OtpVerificationPage(
 @Composable
 fun OtpVerificationPagePreview() {
     OtpVerificationPage(
-        onBackClick = { }
+        onBackClick = { },
+        onVerifyClick = { }
     )
 }

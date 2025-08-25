@@ -32,6 +32,10 @@
     </string>
     <string name="title_activity_otp_verfication">OtpVerfication</string>
     <string name="title_activity_forget_password_page">ForgetPasswordPage</string>
+    <string name="title_activity_login_page">LoginPageActivity</string>
+    <string name="title_activity_change_password">ChangePasswordActivity</string>
+    <string name="title_activity_otp_verification">OtpVerificationActivity</string>
+    <string name="title_activity_home">HomeActivity</string>
     <!--    <string-array name="spiner_items">-->
     <!--        <item>Male</item>-->
     <!--        <item>Female</item>-->
