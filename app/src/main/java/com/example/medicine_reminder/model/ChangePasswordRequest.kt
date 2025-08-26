@@ -1,6 +1,6 @@
 package com.example.medicine_reminder.model
 
-class VerifyOtp(
+class ChangePasswordRequest (
     val email: String,
-    val otp : String
+    val newPassword: String
 )

@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -23,13 +24,14 @@ import com.example.medicine_reminder.uicomponents.TopRoundedBackButtonCircle
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChangePasswordScreen(
+    onChangePasswordClick: (String,String) -> Unit,
     onBackClick: () -> Unit
 ) {
-    var newPassword by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
+    var newPassword by remember { mutableStateOf(TextFieldValue("")) }
+    var confirmPassword by remember { mutableStateOf(TextFieldValue("")) }
     var showNewPassword by remember { mutableStateOf(false) }
     var showConfirmPassword by remember { mutableStateOf(false) }
-    var message by remember { mutableStateOf("") }
+//    var message by remember { mutableStateOf("") }
 
     Scaffold(
         modifier = Modifier
@@ -41,7 +43,7 @@ fun ChangePasswordScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp),
+                    .padding(16.dp),
                 horizontalArrangement = Arrangement.Start
             ) {
                 TopRoundedBackButtonCircle {
@@ -144,22 +146,18 @@ fun ChangePasswordScreen(
             // Change button
             Button(
                 onClick = {
-                    message = if (newPassword == confirmPassword && newPassword.isNotBlank()) {
-                        "Password changed successfully!"
-                    } else {
-                        "Passwords do not match!"
-                    }
+                    onChangePasswordClick(newPassword.text,confirmPassword.text)
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Change Password")
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            if (message.isNotEmpty()) {
-                Text(text = message, color = MaterialTheme.colorScheme.primary)
-            }
+//            Spacer(modifier = Modifier.height(16.dp))
+//
+//            if (message.isNotEmpty()) {
+//                Text(text = message, color = MaterialTheme.colorScheme.primary)
+//            }
         }
     }
 }
@@ -167,6 +165,7 @@ fun ChangePasswordScreen(
 @Composable
 fun ChangePasswordScreenPreview(){
     ChangePasswordScreen (
-        onBackClick = { }
+        onBackClick = { },
+        onChangePasswordClick = {_,_->}
     )
 }

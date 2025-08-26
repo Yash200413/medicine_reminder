@@ -19,30 +19,46 @@ class OtpVerificationActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val email = intent.getStringExtra("email") ?: ""
         setContent {
             MedicineReminderTheme {
                 OtpVerificationPage(
                     onBackClick = { TODO() },
+
                     onVerifyClick = { otp ->
-                        var request = VerifyOtp(otp)
+
+                        var request = VerifyOtp(email, otp)
                         RetrofitClient.api.verifyOtp(request)
                             .enqueue(object : Callback<VerifyOtpResponse> {
+
                                 override fun onResponse(
                                     call: Call<VerifyOtpResponse?>,
                                     response: Response<VerifyOtpResponse?>
                                 ) {
-                                    if (response.isSuccessful && response.body() != null) {
-                                        startActivity(
-                                            Intent(
-                                                this@OtpVerificationActivity,
-                                                ChangePasswordActivity::class.java
+                                    if (response.isSuccessful) {
+                                        val result = response.body()
+//                                        Log.e("API",result.toString())
+//                                        Log.e("API response", result?.message.toString())
+                                        if (result != null && result.message) {
+                                            startActivity(
+                                                Intent(
+                                                    this@OtpVerificationActivity,
+                                                    ChangePasswordActivity::class.java
+                                                ).putExtra("email",email)
                                             )
-                                        )
-                                        finish()
+                                            finish()
+                                        } else {
+                                            Toast.makeText(
+                                                this@OtpVerificationActivity,
+                                                "Invalid OTP",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+
+                                        }
                                     } else {
                                         Toast.makeText(
                                             this@OtpVerificationActivity,
-                                            "Invalid Text",
+                                            "Server Error",
                                             Toast.LENGTH_SHORT
                                         ).show()
                                     }

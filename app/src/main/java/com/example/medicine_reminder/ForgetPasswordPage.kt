@@ -7,15 +7,6 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.medicine_reminder.model.LoginRequest
-import com.example.medicine_reminder.model.LoginResponse
 import com.example.medicine_reminder.model.OtpRequest
 import com.example.medicine_reminder.model.OtpResponse
 import com.example.medicine_reminder.retrofit.RetrofitClient
@@ -39,18 +30,29 @@ class ForgetPasswordPage : ComponentActivity() {
                                 call: Call<OtpResponse>,
                                 response: Response<OtpResponse>
                             ) {
-                                if (response.isSuccessful && response.body() != null) {
-                                    startActivity(
-                                        Intent(
-                                            this@ForgetPasswordPage,
-                                            OtpVerificationActivity::class.java
+                                if (response.isSuccessful) {
+                                    val result = response.body()
+//                                    Log.e("API",result.toString())
+//                                    Log.e("API response", result?.message.toString())
+                                    if (result != null && result.message) {
+                                        startActivity(
+                                            Intent(
+                                                this@ForgetPasswordPage,
+                                                OtpVerificationActivity::class.java
+                                            ).putExtra("email", email)
                                         )
-                                    )
-                                    finish()
+                                        finish()
+                                    } else {
+                                        Toast.makeText(
+                                            this@ForgetPasswordPage,
+                                            "Invalid email address",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
                                 } else {
                                     Toast.makeText(
                                         this@ForgetPasswordPage,
-                                        "Invalid email address",
+                                        "Server error",
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
@@ -68,8 +70,8 @@ class ForgetPasswordPage : ComponentActivity() {
                     },
                     onBackClick = { }
                 )
-                }
             }
         }
     }
+}
 

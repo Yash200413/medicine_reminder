@@ -1,5 +1,7 @@
 package com.example.medicine_reminder.api
 
+import com.example.medicine_reminder.model.ChangePasswordRequest
+import com.example.medicine_reminder.model.ChangePasswordResponse
 import com.example.medicine_reminder.model.OtpRequest
 import com.example.medicine_reminder.model.GoogleLoginRequest
 import com.example.medicine_reminder.model.LoginRequest
@@ -28,4 +30,7 @@ interface ApiService {
 
     @POST("/api/auth/verify")
     fun verifyOtp(@Body request: VerifyOtp): Call<VerifyOtpResponse>
+
+    @POST("/api/auth/change-password")
+    fun changePassword(@Body request: ChangePasswordRequest): Call<ChangePasswordResponse>
 }

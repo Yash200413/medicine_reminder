@@ -1,5 +1,5 @@
 package com.example.medicine_reminder.model
 
-class VerifyOtpResponse(
+class ChangePasswordResponse(
     val message: Boolean
 )

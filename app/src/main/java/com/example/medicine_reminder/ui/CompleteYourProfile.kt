@@ -52,7 +52,7 @@ fun ProfileScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp),
+                    .padding(16.dp),
                 horizontalArrangement = Arrangement.Start
             ) {
                 TopRoundedBackButtonCircle {
