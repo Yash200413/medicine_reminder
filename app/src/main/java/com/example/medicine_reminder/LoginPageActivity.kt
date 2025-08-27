@@ -40,7 +40,14 @@ class LoginPageActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MedicineReminderTheme {
-                LoginScreen(onLoginClick = { email, password ->
+                LoginScreen(
+                    onRegisterClick = {
+                        startActivity(
+                            Intent(this@LoginPageActivity, CreateAccountActivity::class.java)
+                        )
+                        finish()
+                    },
+                    onLoginClick = { email, password ->
                     if (email.isBlank() || password.isBlank()) {
                         Toast.makeText(
                             this, "Please enter both email and password", Toast.LENGTH_SHORT

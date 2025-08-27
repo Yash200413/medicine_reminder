@@ -91,12 +91,12 @@ fun ForgotPasswordScreen(
                 value = email,
                 onValueChange = { email = it },
                 singleLine = true,
-                shape = RoundedCornerShape(16.dp),
                 colors = TextFieldDefaults.colors(
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent
                 ),
+                shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -104,6 +104,7 @@ fun ForgotPasswordScreen(
 
             Button(
                 onClick = { onResetClick(email.text) },
+                shape = RoundedCornerShape(25.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Send Code")

@@ -122,6 +122,7 @@ fun OtpVerificationPage(
                     val otp = otpValues.joinToString("")
                     onVerifyClick(otp)
                 },
+                shape = RoundedCornerShape(25.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Verify")

@@ -2,6 +2,7 @@ package com.example.medicine_reminder.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -29,7 +30,6 @@ fun ChangePasswordScreen(
 ) {
     var newPassword by remember { mutableStateOf(TextFieldValue("")) }
     var confirmPassword by remember { mutableStateOf(TextFieldValue("")) }
-    var showNewPassword by remember { mutableStateOf(false) }
     var showConfirmPassword by remember { mutableStateOf(false) }
 //    var message by remember { mutableStateOf("") }
 
@@ -96,20 +96,13 @@ fun ChangePasswordScreen(
             TextField(
                 value = newPassword,
                 onValueChange = { newPassword = it },
-                visualTransformation = if (showNewPassword) VisualTransformation.None else PasswordVisualTransformation(),
+                visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                trailingIcon = {
-                    IconButton(onClick = { showNewPassword = !showNewPassword }) {
-                        Icon(
-                            imageVector = if (showNewPassword) Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
-                            contentDescription = if (showNewPassword) "Hide password" else "Show password"
-                        )
-                    }
-                },
                 colors = TextFieldDefaults.colors(
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent),
+                shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -138,6 +131,7 @@ fun ChangePasswordScreen(
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent),
+                shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -148,6 +142,7 @@ fun ChangePasswordScreen(
                 onClick = {
                     onChangePasswordClick(newPassword.text,confirmPassword.text)
                 },
+                shape = RoundedCornerShape(25.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Change Password")

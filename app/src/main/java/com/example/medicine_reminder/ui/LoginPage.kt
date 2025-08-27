@@ -1,6 +1,5 @@
 package com.example.medicine_reminder.ui
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,18 +12,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -42,7 +42,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,7 +51,8 @@ import com.example.medicine_reminder.R
 fun LoginScreen(
     onForgotPasswordClick: () -> Unit,
     onLoginClick: (String, String) -> Unit,
-    onSignInWithGoogleClick: () -> Unit
+    onSignInWithGoogleClick: () -> Unit,
+    onRegisterClick: () -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -114,6 +114,7 @@ fun LoginScreen(
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent
                 ),
+                shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -142,12 +143,13 @@ fun LoginScreen(
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent
                 ),
+                shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.fillMaxWidth()
             )
 
             Text(
                 text = "Forgot Password?",
-                textAlign = TextAlign.Center,
+//                textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
                     .align(Alignment.End)
@@ -160,8 +162,8 @@ fun LoginScreen(
             // Login Button
             Button(
                 onClick = { onLoginClick(email, password) },
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(10.dp)
+                shape = RoundedCornerShape(25.dp),
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Login", fontSize = 16.sp)
             }
@@ -188,30 +190,49 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Google Sign In Button (UI only)
-            Button(
+            //Google Login
+            OutlinedButton(
                 onClick = { onSignInWithGoogleClick() },
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surface),
-                shape = RoundedCornerShape(10.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+                shape = RoundedCornerShape(25.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_google),
+                    contentDescription = "Google",
+                    tint = Color.Unspecified,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("Sign in with Google", color = Color.Black)
+            }
+
+            Spacer(modifier = Modifier.width(24.dp))
+
+            Row(
+                horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                // Replace with your google logo (png in res/drawable)
-                Image(
-                    painter = painterResource(id = R.drawable.ic_google), // Add google icon in drawable
-                    contentDescription = "Google Logo",
-                    modifier = Modifier.size(30.dp)
+                Text("Don't Have An Account? ")
+                Text(
+                    text = "Register",
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .clickable(onClick = onRegisterClick)
                 )
             }
         }
     }
 }
 
-@Preview(showSystemUi = true)
-@Composable
-fun LoginScreenPreview() {
-    LoginScreen(
-        onForgotPasswordClick = {},
-        onLoginClick = { _, _ -> },
-        onSignInWithGoogleClick = {}
-    )
-}
+//@Preview(showSystemUi = true)
+//@Composable
+//fun LoginScreenPreview() {
+//    LoginScreen(
+//        onForgotPasswordClick = {},
+//        onLoginClick = { _, _ -> },
+//        onSignInWithGoogleClick = {},
+//        onRegisterClick = {}
+//    )
+//}
