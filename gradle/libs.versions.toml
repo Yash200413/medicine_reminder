@@ -24,6 +24,7 @@ activityCompose = "1.10.1"
 composeBom = "2024.09.00"
 uiText = "1.9.0"
 roomCompiler = "2.7.2"
+uiTest = "1.9.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -52,6 +53,7 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-ui-text = { group = "androidx.compose.ui", name = "ui-text", version.ref = "uiText" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompiler" }
+androidx-ui-test = { group = "androidx.compose.ui", name = "ui-test", version.ref = "uiTest" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

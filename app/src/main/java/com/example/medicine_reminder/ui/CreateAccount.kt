@@ -312,13 +312,13 @@ fun RegisterScreen(
     }
 }
 
-//@Preview(showSystemUi = true)
-//@Composable
-//fun RegisterScreenPreview() {
-//    RegisterScreen(
-//        onLogInClick = {},
-//        onBackClick = {},
-//        onRegisterClick = {_,_,_,_ ->},
-//        onSignWithGoogleClick = {}
-//    )
-//}
+@Preview(showSystemUi = true)
+@Composable
+fun RegisterScreenPreview() {
+    RegisterScreen(
+        onLogInClick = {},
+        onBackClick = {},
+        onRegisterClick = {_,_,_,_ ->},
+        onSignWithGoogleClick = {}
+    )
+}

@@ -71,6 +71,8 @@ dependencies {
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.ui.test)
     debugImplementation("androidx.compose.ui:ui-tooling")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-text")
@@ -117,7 +119,7 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     // --- Testing ---
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+//    androidTestImplementation(platform("androidx.test:runner-bom:1.5.0"))
+//    androidTestImplementation("androidx.test.espresso:espresso-core")
+//    androidTestImplementation("androidx.test.ext:junit")
 }

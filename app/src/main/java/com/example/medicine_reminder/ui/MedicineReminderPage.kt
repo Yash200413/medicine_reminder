@@ -44,7 +44,7 @@ fun MedicineReminderScreen() {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Phuong Nguyen") },
+                title = { Text("Yash Guleria") },
                 navigationIcon = {
                     IconButton(onClick = {}) {
                         Icon(Icons.Default.Person, contentDescription = "Profile")
