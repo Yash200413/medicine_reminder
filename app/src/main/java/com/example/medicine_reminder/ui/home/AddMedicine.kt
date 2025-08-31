@@ -1,4 +1,4 @@
-package com.example.medicine_reminder.ui
+package com.example.medicine_reminder.ui.home
 
 import android.app.DatePickerDialog
 import androidx.compose.foundation.background
@@ -38,6 +38,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,7 +48,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.test.isSelected
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
@@ -55,39 +55,38 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.medicine_reminder.uicomponents.TopRoundedBackButtonCircle
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddMedicineScreen(
-    makeScheduleClick: (String, String, String, String, String, String, String, String, List<String>) -> Unit,
-    onBackClick: () -> Unit
+    frequencyOptions: List<AddMedicineActivity.FrequencyOption>,
+    onBackClick: () -> Unit,
+    makeScheduleClick: (String, String, String, String, String, AddMedicineActivity.FrequencyOption?, Long, Long, List<String>) -> Unit
 ) {
-    data class FrequencyOption(
-        val label: String,   // What user sees
-        val hours: Int?      // Interval in hours (null = special cases like before meals)
-    )
-
     var medicineName by remember { mutableStateOf(TextFieldValue("")) }
     var strength by remember { mutableStateOf(TextFieldValue("")) }
     var whenToTake by remember { mutableStateOf("") }
     var type by remember { mutableStateOf("") }
     var amount by remember { mutableStateOf("") }
-    var frequency by remember { mutableStateOf("") }
-    var start by remember { mutableStateOf("") }
-    var finish by remember { mutableStateOf("") }
+    var selectedFrequency by remember { mutableStateOf("") }
+    var start by remember { mutableLongStateOf(0L) }
+    var finish by remember { mutableLongStateOf(0L) }
     val selectedDays = remember { mutableStateListOf<String>() }
 
-    val frequencyOptions = listOf(
-        FrequencyOption("Once a day", 24),
-        FrequencyOption("Twice a day", 12),
-        FrequencyOption("Thrice a day", 8),
-        FrequencyOption("Every 6 hours", 6),
-        FrequencyOption("Every 8 hours", 8),
-        FrequencyOption("Every 12 hours", 12),
-        FrequencyOption("As needed", null)
-    )
+//    val frequencyOptions = listOf(
+//        "Once a day",
+//        "Twice a day",
+//        "Thrice a day",
+//        "Every 6 hours",
+//        "Every 8 hours",
+//        "Every 12 hours",
+//        "As needed"
+//    )
     val amountOptions: List<String> = listOf(
         "½",       // half
         "1",
@@ -119,10 +118,7 @@ fun AddMedicineScreen(
         "Afternoon",
         "Evening",
         "Night",
-        "Empty stomach",
-        "With food",
-        "With water",
-        "As directed by doctor"
+        "Empty stomach"
     )
     Scaffold(
         topBar = {
@@ -257,8 +253,8 @@ fun AddMedicineScreen(
                         DropdownMenuBox(
                             placeholder = "Frequency",
                             options = frequencyOptions.map { it.label },
-                            value = frequency,
-                            onValueChange = { frequency = it }
+                            value = selectedFrequency,
+                            onValueChange = { selectedFrequency = it }
                         )
                     }
                 }
@@ -274,7 +270,10 @@ fun AddMedicineScreen(
                         Spacer(modifier = Modifier.height(4.dp))
                         DatePickerTextField(
                             value = start,
-                            onValueChange = { start = it }
+                            onValueChange = { newDateMillis ->
+                                start = newDateMillis
+                            }
+
                         )
                     }
                     Column(modifier = Modifier.weight(1f)) {
@@ -282,7 +281,10 @@ fun AddMedicineScreen(
                         Spacer(modifier = Modifier.height(4.dp))
                         DatePickerTextField(
                             value = finish,
-                            onValueChange = { finish = it }
+                            onValueChange = { newDateMillis ->
+                                finish = newDateMillis
+                            }
+
                         )
                     }
                 }
@@ -309,7 +311,9 @@ fun AddMedicineScreen(
                                 },
                                 border = null,
                                 colors = AssistChipDefaults.assistChipColors(
-                                    containerColor = if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.5f) else MaterialTheme.colorScheme.surfaceVariant,
+                                    containerColor = if (isSelected) MaterialTheme.colorScheme.primary.copy(
+                                        alpha = 0.5f
+                                    ) else MaterialTheme.colorScheme.surfaceVariant,
                                     labelColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
                                 ),
                                 shape = RoundedCornerShape(12.dp),
@@ -325,6 +329,7 @@ fun AddMedicineScreen(
             item {
                 Button(
                     onClick = {
+                        val frequency = frequencyOptions.find { it.label == selectedFrequency }
                         makeScheduleClick(
                             medicineName.text,
                             strength.text,
@@ -360,7 +365,6 @@ fun DropdownMenuBox(
     options: List<String>
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf("") }
 
     ExposedDropdownMenuBox(
         expanded = expanded,
@@ -368,7 +372,7 @@ fun DropdownMenuBox(
         modifier = modifier.fillMaxWidth()
     ) {
         TextField(
-            value = selectedText,
+            value = value,
             onValueChange = {},
             placeholder = { Text(placeholder) },
             readOnly = true,
@@ -395,7 +399,7 @@ fun DropdownMenuBox(
                 DropdownMenuItem(
                     text = { Text(selectionOption) },
                     onClick = {
-                        selectedText = selectionOption
+                        onValueChange(selectionOption)  // update parent
                         expanded = false
                     }
                 )
@@ -407,18 +411,28 @@ fun DropdownMenuBox(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePickerTextField(
-    value: String,                     // ⬅️ current selected value
-    onValueChange: (String) -> Unit,
+    value: Long,                             // ⬅️ store date as millis
+    onValueChange: (Long) -> Unit,           // return selected millis
 ) {
     val context = LocalContext.current
-    var selectedDate by remember { mutableStateOf("") }
     val calendar = Calendar.getInstance()
+
+    // Convert Long millis -> formatted string
+    val formattedDate = remember(value) {
+        if (value != 0L) {
+            SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(value))
+        } else {
+            ""
+        }
+    }
 
     // DatePickerDialog
     val datePickerDialog = DatePickerDialog(
         context,
         { _, year, month, dayOfMonth ->
-            selectedDate = "$dayOfMonth/${month + 1}/$year"
+            calendar.set(year, month, dayOfMonth, 0, 0, 0)
+            val millis = calendar.timeInMillis
+            onValueChange(millis) // pass back millis
         },
         calendar.get(Calendar.YEAR),
         calendar.get(Calendar.MONTH),
@@ -426,11 +440,11 @@ fun DatePickerTextField(
     )
 
     TextField(
-        value = selectedDate,
+        value = formattedDate,   // show formatted date in UI
         onValueChange = { },
         modifier = Modifier.fillMaxWidth(),
         placeholder = { Text("Select Date") },
-        readOnly = true, // ✅ stops keyboard but allows clicks
+        readOnly = true, // ✅ prevents typing, allows clicking
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
@@ -453,7 +467,11 @@ fun DatePickerTextField(
 @Composable
 fun AddMedicineScreenPreview() {
     AddMedicineScreen(
+        frequencyOptions = listOf(
+            AddMedicineActivity.FrequencyOption("Once a day", 24),
+            AddMedicineActivity.FrequencyOption("Twice a day", 12)
+        ),
         onBackClick = {},
-        makeScheduleClick = {_,_,_,_,_,_,_,_,_->}
+        makeScheduleClick = { _, _, _, _, _, _, _, _, _ -> }
     )
 }

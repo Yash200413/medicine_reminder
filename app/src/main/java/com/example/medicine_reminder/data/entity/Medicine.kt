@@ -12,5 +12,7 @@ data class Medicine(
 //    val instructions: String,
     val type: String,
     val startDate: Long,
-    val endDate: Long
+    val endDate: Long,
+    val pattern: String,
+    val time: Long?
 )

@@ -1,4 +1,4 @@
-package com.example.medicine_reminder.ui
+package com.example.medicine_reminder.ui.forgotpassword
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

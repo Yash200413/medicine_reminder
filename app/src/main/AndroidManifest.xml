@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.medicine_reminder">
+
     <!-- Required for network access -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        android:name=".MedicineReminderApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -14,60 +16,65 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LogInPage"
         android:usesCleartextTraffic="true">
+
+        <!-- AddMedicineActivity -->
         <activity
-            android:name=".AddMedicineActivity"
+            android:name="com.example.medicine_reminder.ui.home.AddMedicineActivity"
             android:exported="false"
             android:label="@string/title_activity_add_medicine"
             android:theme="@style/Theme.LogInPage" />
+
+        <!-- CreateAccountActivity -->
         <activity
-            android:name=".CreateAccountActivity"
+            android:name="com.example.medicine_reminder.ui.signup.CreateAccountActivity"
             android:exported="false"
             android:label="@string/title_activity_create_account"
             android:theme="@style/Theme.LogInPage" />
+
+        <!-- HomeActivity -->
         <activity
-            android:name=".HomeActivity"
+            android:name="com.example.medicine_reminder.ui.home.HomeActivity"
             android:exported="false"
             android:label="@string/title_activity_home"
             android:theme="@style/Theme.LogInPage" />
+
+        <!-- OtpVerificationActivity -->
         <activity
-            android:name=".OtpVerificationActivity"
+            android:name="com.example.medicine_reminder.ui.otp.OtpVerificationActivity"
             android:exported="false"
             android:label="@string/title_activity_otp_verification"
             android:theme="@style/Theme.LogInPage" />
+
+        <!-- ChangePasswordActivity -->
         <activity
-            android:name=".ChangePasswordActivity"
+            android:name="com.example.medicine_reminder.ui.forgotpassword.ChangePasswordActivity"
             android:exported="false"
             android:label="@string/title_activity_change_password"
             android:theme="@style/Theme.LogInPage" />
+
+        <!-- LoginPageActivity (Launcher) -->
         <activity
-            android:name=".LoginPageActivity"
+            android:name="com.example.medicine_reminder.ui.login.LoginPageActivity"
             android:exported="true"
             android:label="@string/title_activity_login_page"
             android:theme="@style/Theme.LogInPage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- ForgetPasswordPage -->
         <activity
-            android:name=".ForgetPasswordPage"
+            android:name="com.example.medicine_reminder.ui.forgotpassword.ForgotPasswordActivity"
             android:exported="false"
             android:label="@string/title_activity_forget_password_page"
             android:theme="@style/Theme.LogInPage" />
-        <activity
-            android:name=".UserDetails"
-            android:exported="false" />
-        <activity
-            android:name=".SignUpActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="false" />
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
     </application>
 
 </manifest>

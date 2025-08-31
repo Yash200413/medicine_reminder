@@ -1,6 +1,6 @@
 package com.example.medicine_reminder.retrofit
 
-import com.example.medicine_reminder.api.ApiService
+import com.example.medicine_reminder.data.api.ApiService
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

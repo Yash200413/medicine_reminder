@@ -1,4 +1,4 @@
-package com.example.medicine_reminder.ui
+package com.example.medicine_reminder.ui.signup
 
 import com.example.medicine_reminder.R
 import android.net.Uri

@@ -1,4 +1,4 @@
-package com.example.medicine_reminder.ui
+package com.example.medicine_reminder.ui.home
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
