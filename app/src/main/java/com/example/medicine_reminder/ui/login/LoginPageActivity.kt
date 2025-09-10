@@ -44,6 +44,8 @@ class LoginPageActivity : ComponentActivity() {
                     onRegisterClick = {
                         startActivity(Intent(this, CreateAccountActivity::class.java))
                         finish()
+//                        startActivity(Intent(this, HomeActivity::class.java))
+//                       finish()
                     },
                     onLoginClick = { email, password ->
                         loginViewModel.login(

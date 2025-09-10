@@ -3,9 +3,12 @@ package com.example.medicine_reminder.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.medicine_reminder.data.AppDatabase
-import com.example.medicine_reminder.data.Repository
-import com.example.medicine_reminder.data.dao.*
+import com.example.medicine_reminder.data.local.AppDatabase
+import com.example.medicine_reminder.data.local.Repository
+import com.example.medicine_reminder.data.local.dao.LogHistoryDao
+import com.example.medicine_reminder.data.local.dao.MedicineDao
+import com.example.medicine_reminder.data.local.dao.ReminderDao
+import com.example.medicine_reminder.reminder.ReminderScheduler
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,15 +22,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideDatabase(
-        @ApplicationContext appContext: Context
-    ): AppDatabase {
-        return Room.databaseBuilder(
-            appContext,
-            AppDatabase::class.java,
-            "my_database"
-        ).build()
-    }
+    fun provideDatabase(@ApplicationContext context: Context): AppDatabase =
+        Room.databaseBuilder(context, AppDatabase::class.java, "medicine_db").build()
 
     @Provides
     fun provideMedicineDao(db: AppDatabase): MedicineDao = db.medicineDao()
@@ -45,4 +41,8 @@ object AppModule {
         reminderDao: ReminderDao,
         logHistoryDao: LogHistoryDao
     ): Repository = Repository(medicineDao, reminderDao, logHistoryDao)
+
+    @Provides @Singleton
+    fun provideScheduler(@ApplicationContext context: Context): ReminderScheduler =
+        ReminderScheduler(context)
 }

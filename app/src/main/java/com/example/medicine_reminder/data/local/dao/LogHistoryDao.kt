@@ -1,8 +1,8 @@
-package com.example.medicine_reminder.data.dao
+package com.example.medicine_reminder.data.local.dao
 
 
 import androidx.room.*
-import com.example.medicine_reminder.data.entity.LogHistory
+import com.example.medicine_reminder.data.local.entity.LogHistory
 import kotlinx.coroutines.flow.Flow
 
 @Dao

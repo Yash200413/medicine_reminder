@@ -52,7 +52,7 @@ fun ForgotPasswordScreen(
                 horizontalArrangement = Arrangement.Start
             ) {
                 TopRoundedBackButtonCircle {
-                    (onBackClick)
+                    onBackClick()
                 }
             }
         }

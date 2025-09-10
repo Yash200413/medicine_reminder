@@ -1,25 +1,25 @@
-package com.example.medicine_reminder.data.entity
-
+package com.example.medicine_reminder.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
+
 @Entity(
-    tableName = "reminder",
+    tableName = "reminders",
     foreignKeys = [
         ForeignKey(
             entity = Medicine::class,
             parentColumns = ["medicineId"],
-            childColumns = ["medicineId"],
+            childColumns = ["medicineOwnerId"],
             onDelete = ForeignKey.CASCADE
         )
-    ]
+    ],
+    indices = [Index("medicineOwnerId")]
 )
 data class Reminder(
     @PrimaryKey(autoGenerate = true) val reminderId: Int = 0,
-    val medicineId: Int,
-    val time: Long,           // Store as millis
-    val repeatPattern: String,
-    val isActive: Boolean = true
+    val time: String,
+    val medicineOwnerId: Int
 )

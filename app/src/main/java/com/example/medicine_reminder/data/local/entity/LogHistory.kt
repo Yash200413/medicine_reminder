@@ -1,4 +1,4 @@
-package com.example.medicine_reminder.data.entity
+package com.example.medicine_reminder.data.local.entity
 
 
 import androidx.room.Entity

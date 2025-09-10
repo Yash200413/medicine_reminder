@@ -47,7 +47,7 @@ fun ChangePasswordScreen(
                 horizontalArrangement = Arrangement.Start
             ) {
                 TopRoundedBackButtonCircle {
-                    (onBackClick)
+                    onBackClick()
                 }
             }
         }

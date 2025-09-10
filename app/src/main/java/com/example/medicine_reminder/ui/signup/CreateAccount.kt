@@ -77,7 +77,7 @@ fun RegisterScreen(
                 horizontalArrangement = Arrangement.Start
             ) {
                 TopRoundedBackButtonCircle {
-                    (onBackClick)
+                    onBackClick()
                 }
             }
         }
