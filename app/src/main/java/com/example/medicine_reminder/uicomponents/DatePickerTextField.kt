@@ -25,8 +25,8 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePickerTextField(
-    value: Long,                             // ⬅️ store date as millis
-    onValueChange: (Long) -> Unit,           // return selected millis
+    value: Long,
+    onValueChange: (Long) -> Unit,
 ) {
     val context = LocalContext.current
     val calendar = Calendar.getInstance()
@@ -54,11 +54,11 @@ fun DatePickerTextField(
     )
 
     TextField(
-        value = formattedDate,   // show formatted date in UI
+        value = formattedDate,
         onValueChange = { },
         modifier = Modifier.fillMaxWidth(),
         placeholder = { Text("Select Date") },
-        readOnly = true, // ✅ prevents typing, allows clicking
+        readOnly = true,
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
@@ -70,7 +70,7 @@ fun DatePickerTextField(
             Icon(
                 imageVector = Icons.Default.ArrowDropDown,
                 contentDescription = "Select date",
-                modifier = Modifier.clickable { datePickerDialog.show() } // 👈 opens calendar
+                modifier = Modifier.clickable { datePickerDialog.show() }
             )
         }
     )

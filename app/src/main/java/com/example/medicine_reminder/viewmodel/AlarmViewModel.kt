@@ -17,11 +17,11 @@ class AlarmViewModel @Inject constructor(
 
     fun snooze(reminderId: Int, medicineName: String) {
         repository.scheduleSnooze(reminderId, medicineName)
-        alarmPlayer.stopAlarm()
+        stopAlarm()
     }
 
     fun dismiss(reminderId: Int) {
         repository.dismiss(reminderId)
-        alarmPlayer.stopAlarm()
+        stopAlarm()
     }
 }

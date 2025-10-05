@@ -5,7 +5,6 @@ import com.example.medicine_reminder.data.local.dao.MedicineDao
 import com.example.medicine_reminder.data.local.dao.ReminderDao
 import com.example.medicine_reminder.data.local.entity.LogHistory
 import com.example.medicine_reminder.data.local.entity.Medicine
-import com.example.medicine_reminder.data.local.entity.MedicineWithReminders
 import com.example.medicine_reminder.data.local.entity.Reminder
 import kotlinx.coroutines.flow.Flow
 
@@ -14,12 +13,11 @@ class Repository(
     private val reminderDao: ReminderDao,
     private val logHistoryDao: LogHistoryDao
 ) {
-    // Medicines
-    fun getAllMedicinesWithReminders(): Flow<List<MedicineWithReminders>> =
-        medicineDao.getAllMedicinesWithReminders()
+
+    // -------------------- Medicines -------------------- //
 
     suspend fun insertMedicine(medicine: Medicine): Int =
-        medicineDao.insertMedicine(medicine).toInt()   // ✅ convert Long → Int
+        medicineDao.insertMedicine(medicine).toInt()
 
     suspend fun updateMedicine(medicine: Medicine) =
         medicineDao.updateMedicine(medicine)
@@ -27,13 +25,17 @@ class Repository(
     suspend fun deleteMedicine(medicine: Medicine) =
         medicineDao.deleteMedicine(medicine)
 
+    suspend fun getMedicineById(medicineId: Int): Medicine? =
+        medicineDao.getMedicineById(medicineId)
 
-    // Reminders
+    // Optional: Live Flow for observing all medicines
+    @Deprecated("Use MedicinesWithReminders in ViewModel for combined flow")
+    fun getAllMedicinesFlow(): Flow<List<Medicine>> = medicineDao.getAllMedicinesFlow()
+
+    // -------------------- Reminders -------------------- //
+
     suspend fun insertReminder(reminder: Reminder): Int =
-        reminderDao.insertReminder(reminder).toInt()   // ✅ convert Long → Int
-
-    suspend fun insertReminders(reminders: List<Reminder>): List<Int> =
-        reminderDao.insertReminders(reminders).map { it.toInt() }  // ✅ List<Long> → List<Int>
+        reminderDao.insertReminder(reminder).toInt()
 
     suspend fun updateReminder(reminder: Reminder) =
         reminderDao.updateReminder(reminder)
@@ -41,18 +43,25 @@ class Repository(
     suspend fun deleteReminder(reminder: Reminder) =
         reminderDao.deleteReminder(reminder)
 
-    // ❌ FIX: provide both Flow and suspend List for flexibility
+    // 🔹 One-time fetch (for internal logic like cancel/reschedule)
+    suspend fun getRemindersForMedicine(medicineId: Int): List<Reminder> =
+        reminderDao.getRemindersForMedicineOnce(medicineId)
+
+    suspend fun getAllReminders(): List<Reminder> =
+        reminderDao.getAllReminders()
+
+    suspend fun getReminderById(reminderId: Int): Reminder? =
+        reminderDao.getReminderById(reminderId)
+
+    // 🔹 Live Flow for UI updates
     fun getRemindersForMedicineFlow(medicineId: Int): Flow<List<Reminder>> =
         reminderDao.getRemindersForMedicine(medicineId)
 
-    suspend fun getRemindersForMedicine(medicineId: Int): List<Reminder> =
-        reminderDao.getRemindersForMedicineOnce(medicineId)   // ✅ needs DAO function for one-time fetch
+    fun getAllRemindersFlow(): Flow<List<Reminder>> =
+        reminderDao.getAllRemindersFlow()
 
-    suspend fun getMedicineById(id: Int): Medicine? = medicineDao.getMedicineById(id)
+    // -------------------- Logs -------------------- //
 
-    suspend fun getReminderById(id: Int): Reminder? = reminderDao.getReminderById(id)
-
-    // Logs
     fun getLogsForReminder(reminderId: Int) =
         logHistoryDao.getLogsForReminder(reminderId)
 

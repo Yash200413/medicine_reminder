@@ -2,20 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.medicine_reminder">
-
     <!-- Required for network access -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission
         android:name="android.permission.USE_EXACT_ALARM"
         tools:ignore="ExactAlarmPolicy,MissingPermission" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
-
 
     <application
         android:name=".MedicineReminderApp"
@@ -27,70 +23,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LogInPage"
         android:usesCleartextTraffic="true">
-
-        <!-- AddMedicineActivity -->
         <activity
-            android:name="com.example.medicine_reminder.ui.home.AddMedicineActivity"
-            android:exported="false"
-            android:label="@string/title_activity_add_medicine"
-            android:theme="@style/Theme.LogInPage" />
-
-        <!-- CreateAccountActivity -->
-        <activity
-            android:name="com.example.medicine_reminder.ui.signup.CreateAccountActivity"
-            android:exported="false"
-            android:label="@string/title_activity_create_account"
-            android:theme="@style/Theme.LogInPage" />
-
-        <!-- HomeActivity -->
-        <activity
-            android:name="com.example.medicine_reminder.ui.home.HomeActivity"
-            android:exported="false"
-            android:label="@string/title_activity_home"
-            android:theme="@style/Theme.LogInPage" />
-
-        <!-- OtpVerificationActivity -->
-        <activity
-            android:name="com.example.medicine_reminder.ui.otp.OtpVerificationActivity"
-            android:exported="false"
-            android:label="@string/title_activity_otp_verification"
-            android:theme="@style/Theme.LogInPage" />
-
-        <!-- ChangePasswordActivity -->
-        <activity
-            android:name="com.example.medicine_reminder.ui.forgotpassword.ChangePasswordActivity"
-            android:exported="false"
-            android:label="@string/title_activity_change_password"
-            android:theme="@style/Theme.LogInPage" />
-
-        <!-- LoginPageActivity (Launcher) -->
-        <activity
-            android:name="com.example.medicine_reminder.ui.login.LoginPageActivity"
-            android:launchMode="singleTask"
+            android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/title_activity_login_page"
+            android:label="@string/title_activity_main"
             android:theme="@style/Theme.LogInPage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <!-- ForgetPasswordPage -->
-        <activity
-            android:name="com.example.medicine_reminder.ui.forgotpassword.ForgotPasswordActivity"
-            android:exported="false"
-            android:label="@string/title_activity_forget_password_page"
-            android:theme="@style/Theme.LogInPage" />
-
         <activity
             android:name=".ui.alarm.AlarmActivity"
-            android:showWhenLocked="true"
-            android:turnScreenOn="true"
             android:excludeFromRecents="true"
+            android:exported="true"
+            android:showWhenLocked="true"
             android:theme="@style/Theme.Material3.DayNight.NoActionBar"
-            android:exported="false"
-            tools:targetApi="27" />
+            android:turnScreenOn="true"
+            tools:targetApi="27"
+            />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
@@ -99,7 +52,6 @@
             android:name=".reminder.ReminderReceiver"
             android:exported="true"
             android:permission="TODO" />
-
         <receiver
             android:name=".reminder.BootReceiver"
             android:enabled="true"
@@ -108,7 +60,6 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
     </application>
 
 </manifest>

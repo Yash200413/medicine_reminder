@@ -73,6 +73,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.ui.test)
+    implementation(libs.androidx.compose.foundation)
     debugImplementation("androidx.compose.ui:ui-tooling")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-text")
@@ -117,6 +118,10 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.51")
     kapt("com.google.dagger:hilt-android-compiler:2.51")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
+    //--- Navigation ---
+    implementation("androidx.navigation:navigation-compose:2.9.5")
+
 
     // --- Testing ---
 //    androidTestImplementation(platform("androidx.test:runner-bom:1.5.0"))

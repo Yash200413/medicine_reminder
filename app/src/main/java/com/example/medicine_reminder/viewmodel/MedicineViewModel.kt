@@ -4,69 +4,96 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.medicine_reminder.data.local.Repository
 import com.example.medicine_reminder.data.local.entity.Medicine
-import com.example.medicine_reminder.data.local.entity.MedicineWithReminders
 import com.example.medicine_reminder.data.local.entity.Reminder
 import com.example.medicine_reminder.reminder.ReminderScheduler
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.forEach
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MedicineViewModel @Inject constructor(
     private val repository: Repository,
-    private val scheduler: ReminderScheduler   // ✅ injected scheduler
+    private val scheduler: ReminderScheduler
 ) : ViewModel() {
 
-    val medicines: StateFlow<List<MedicineWithReminders>> =
-        repository.getAllMedicinesWithReminders()
-            .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+    // -------------------- Combined UI State -------------------- //
+    private val _medicines = MutableStateFlow<List<MedicineWithReminders>>(emptyList())
+    val medicines: StateFlow<List<MedicineWithReminders>> = _medicines.asStateFlow()
 
-    fun addMedicine(medicine: Medicine, reminders: List<String>) {
+    init {
+        observeMedicinesAndReminders()
+    }
+
+    private fun observeMedicinesAndReminders() {
         viewModelScope.launch {
-            // ✅ Repository insert returns Int (ensure DAO insert returns Int)
-            val medicineId: Int = repository.insertMedicine(medicine)
-
-            reminders.forEach { time ->
-                val reminder = Reminder(time = time, medicineOwnerId = medicineId)
-                val reminderId: Int = repository.insertReminder(reminder)
-
-                // ✅ Schedule alarm after saving
-                scheduler.scheduleReminder(
-                    medicine.copy(medicineId = medicineId),
-                    reminder.copy(reminderId = reminderId)
-                )
+            combine(
+                repository.getAllMedicinesFlow(),
+                repository.getAllRemindersFlow()
+            ) { meds, rems ->
+                meds.map { med ->
+                    val associatedReminders = rems.filter { it.medicineOwnerId == med.medicineId }
+                    MedicineWithReminders(med, associatedReminders)
+                }
+            }.collect { combined ->
+                _medicines.value = combined
             }
         }
     }
 
-    fun updateMedicine(medicine: Medicine) = viewModelScope.launch {
-        repository.updateMedicine(medicine)
+    // -------------------- Wrapper Data Class -------------------- //
+    data class MedicineWithReminders(
+        val medicine: Medicine,
+        val reminders: List<Reminder>
+    )
+
+    // -------------------- CRUD Operations -------------------- //
+
+    fun addMedicine(medicine: Medicine, reminders: List<String>) {
+        viewModelScope.launch {
+            val medicineId = repository.insertMedicine(medicine)
+            reminders.forEach { time ->
+                val rem = Reminder(time = time, medicineOwnerId = medicineId)
+                val reminderId = repository.insertReminder(rem)
+                scheduler.scheduleReminder(medicine.copy(medicineId = medicineId), rem.copy(reminderId = reminderId))
+            }
+        }
     }
 
-    fun deleteMedicine(medicine: Medicine) = viewModelScope.launch {
-        // ✅ cancel all reminders before deleting
-        val reminders = repository.getRemindersForMedicine(medicine.medicineId)
-        reminders.forEach { scheduler.cancelReminder(it.reminderId) }
-        repository.deleteMedicine(medicine)
+    fun updateMedicine(medicine: Medicine) {
+        viewModelScope.launch { repository.updateMedicine(medicine) }
     }
 
-    fun addReminder(reminder: Reminder, medicine: Medicine) = viewModelScope.launch {
-        val reminderId: Int = repository.insertReminder(reminder)
-        scheduler.scheduleReminder(medicine, reminder.copy(reminderId = reminderId))
+    fun deleteMedicine(medicine: Medicine) {
+        viewModelScope.launch {
+            val reminders = repository.getRemindersForMedicine(medicine.medicineId)
+            reminders.forEach { scheduler.cancelReminder(it.reminderId) }
+            repository.deleteMedicine(medicine)
+        }
     }
 
-    fun updateReminder(reminder: Reminder, medicine: Medicine) = viewModelScope.launch {
-        scheduler.cancelReminder(reminder.reminderId) // cancel old
-        repository.updateReminder(reminder)
-        scheduler.scheduleReminder(medicine, reminder)
+    fun addReminder(reminder: Reminder) {
+        viewModelScope.launch {
+            val reminderId = repository.insertReminder(reminder)
+            val med = repository.getMedicineById(reminder.medicineOwnerId)
+            med?.let { scheduler.scheduleReminder(it, reminder.copy(reminderId = reminderId)) }
+        }
     }
 
-    fun deleteReminder(reminder: Reminder) = viewModelScope.launch {
-        scheduler.cancelReminder(reminder.reminderId)
-        repository.deleteReminder(reminder)
+    fun updateReminder(reminder: Reminder) {
+        viewModelScope.launch {
+            scheduler.cancelReminder(reminder.reminderId)
+            repository.updateReminder(reminder)
+            repository.getMedicineById(reminder.medicineOwnerId)?.let {
+                scheduler.scheduleReminder(it, reminder)
+            }
+        }
+    }
+
+    fun deleteReminder(reminder: Reminder) {
+        viewModelScope.launch {
+            scheduler.cancelReminder(reminder.reminderId)
+            repository.deleteReminder(reminder)
+        }
     }
 }

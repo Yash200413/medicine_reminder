@@ -20,18 +20,31 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.medicine_reminder.uicomponents.TopRoundedBackButtonCircle
+import com.example.medicine_reminder.viewmodel.ChangePasswordViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChangePasswordScreen(
-    onChangePasswordClick: (String,String) -> Unit,
-    onBackClick: () -> Unit
+    email: String,
+    onBackClick: () -> Unit,
+    onNavigateToLogin: () -> Unit
 ) {
+    val viewModel: ChangePasswordViewModel = hiltViewModel()
+    val uiState by viewModel.uiState.collectAsState()
+
     var newPassword by remember { mutableStateOf(TextFieldValue("")) }
     var confirmPassword by remember { mutableStateOf(TextFieldValue("")) }
     var showConfirmPassword by remember { mutableStateOf(false) }
-//    var message by remember { mutableStateOf("") }
+
+    // Navigate on success
+    LaunchedEffect(uiState.success) {
+        if (uiState.success) {
+            onNavigateToLogin()
+            viewModel.resetState()
+        }
+    }
 
     Scaffold(
         modifier = Modifier
@@ -39,16 +52,13 @@ fun ChangePasswordScreen(
             .displayCutoutPadding()
             .background(MaterialTheme.colorScheme.primary),
         topBar = {
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
                 horizontalArrangement = Arrangement.Start
             ) {
-                TopRoundedBackButtonCircle {
-                    onBackClick()
-                }
+                TopRoundedBackButtonCircle { onBackClick() }
             }
         }
     ) { innerPadding ->
@@ -64,7 +74,6 @@ fun ChangePasswordScreen(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
                 Text(
                     text = "Reset Password",
                     fontSize = 22.sp,
@@ -72,27 +81,21 @@ fun ChangePasswordScreen(
                 )
             }
 
-
-             Row(
-                 modifier = Modifier
-                     .fillMaxWidth()
-                     .padding(30.dp),
-                 horizontalArrangement = Arrangement.Center,
-                 verticalAlignment = Alignment.CenterVertically
-             ){
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(30.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(
-                    text = "Create a new password for your account. "+
-                            "Password must be 8 character in length"
+                    text = "Create a new password for your account. " +
+                            "Password must be 8 characters in length"
                 )
             }
 
+            Text(modifier = Modifier.fillMaxWidth(), text = "New Password")
 
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = "New Password"
-            )
-
-            // New password
             TextField(
                 value = newPassword,
                 onValueChange = { newPassword = it },
@@ -101,19 +104,16 @@ fun ChangePasswordScreen(
                 colors = TextFieldDefaults.colors(
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent),
+                    disabledIndicatorColor = Color.Transparent
+                ),
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = "Confirm Password"
-            )
+            Text(modifier = Modifier.fillMaxWidth(), text = "Confirm Password")
 
-            // Confirm new password
             TextField(
                 value = confirmPassword,
                 onValueChange = { confirmPassword = it },
@@ -130,37 +130,44 @@ fun ChangePasswordScreen(
                 colors = TextFieldDefaults.colors(
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent),
+                    disabledIndicatorColor = Color.Transparent
+                ),
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Change button
             Button(
-                onClick = {
-                    onChangePasswordClick(newPassword.text,confirmPassword.text)
-                },
+                onClick = { viewModel.changePassword(email, newPassword.text, confirmPassword.text) },
                 shape = RoundedCornerShape(25.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Change Password")
+                if (uiState.loading) {
+                    CircularProgressIndicator(
+                        color = Color.White,
+                        strokeWidth = 2.dp,
+                        modifier = Modifier.size(20.dp)
+                    )
+                } else {
+                    Text("Change Password")
+                }
             }
 
-//            Spacer(modifier = Modifier.height(16.dp))
-//
-//            if (message.isNotEmpty()) {
-//                Text(text = message, color = MaterialTheme.colorScheme.primary)
-//            }
+            // Show error message
+            uiState.error?.let { error ->
+                Text(text = error, color = Color.Red, modifier = Modifier.padding(top = 8.dp))
+            }
         }
     }
 }
+
 @Preview(showSystemUi = true)
 @Composable
-fun ChangePasswordScreenPreview(){
-    ChangePasswordScreen (
-        onBackClick = { },
-        onChangePasswordClick = {_,_->}
+fun ChangePasswordScreenPreview() {
+    ChangePasswordScreen(
+        email = "example@mail.com",
+        onBackClick = {},
+        onNavigateToLogin = {}
     )
 }

@@ -1,71 +1,88 @@
 package com.example.medicine_reminder.ui.signup
 
+import android.app.Activity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.displayCutoutPadding
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.DividerDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.medicine_reminder.R
 import com.example.medicine_reminder.uicomponents.TopRoundedBackButtonCircle
+import com.example.medicine_reminder.viewmodel.CreateAccountViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
     onBackClick: () -> Unit,
-    onRegisterClick: (String,String,String,String) -> Unit,
-    onSignWithGoogleClick: () -> Unit,
-    onLogInClick: () -> Unit
+    onNavigateToHome: () -> Unit,
+    onNavigateToLogin: () -> Unit
 ) {
+    val viewModel: CreateAccountViewModel = hiltViewModel()
+    val uiState by viewModel.uiState.collectAsState()
+
     var name by remember { mutableStateOf(TextFieldValue("")) }
     var email by remember { mutableStateOf(TextFieldValue("")) }
     var password by remember { mutableStateOf(TextFieldValue("")) }
     var confirmPassword by remember { mutableStateOf(TextFieldValue("")) }
     var showConfirmPassword by remember { mutableStateOf(false) }
     var checked by remember { mutableStateOf(false) }
+
+
+    val context = LocalContext.current
+    val activity = context as Activity
+    // Google Sign-In
+    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        .requestIdToken(stringResource(id = R.string.default_web_client_id))
+        .requestEmail()
+        .build()
+    val googleSignInClient: GoogleSignInClient = GoogleSignIn.getClient(activity, gso)
+
+    val launcher = rememberLauncherForActivityResult(StartActivityForResult()) { result ->
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        try {
+            val account = task.getResult(Exception::class.java)
+            val idToken = account?.idToken
+            val googleEmail = account?.email
+            if (idToken != null) {
+                viewModel.googleLogin(googleEmail, idToken)
+            }
+        } catch (e: Exception) {
+            // Handle error if needed
+        }
+    }
+
+    // Navigate on success
+    LaunchedEffect(uiState.success) {
+        if (uiState.success) {
+            onNavigateToHome()
+            viewModel.resetState()
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -76,9 +93,7 @@ fun RegisterScreen(
                     .padding(16.dp),
                 horizontalArrangement = Arrangement.Start
             ) {
-                TopRoundedBackButtonCircle {
-                    onBackClick()
-                }
+                TopRoundedBackButtonCircle { onBackClick() }
             }
         }
     ) { paddingValues ->
@@ -87,7 +102,6 @@ fun RegisterScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(20.dp),
-//            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
             item {
@@ -119,7 +133,6 @@ fun RegisterScreen(
 
             item {
                 Text(text = "Name")
-                // Name Field
                 TextField(
                     value = name,
                     onValueChange = { name = it },
@@ -138,7 +151,6 @@ fun RegisterScreen(
 
             item {
                 Text(text = "Email")
-                // Email Field
                 TextField(
                     value = email,
                     onValueChange = { email = it },
@@ -156,12 +168,7 @@ fun RegisterScreen(
             item { Spacer(modifier = Modifier.height(16.dp)) }
 
             item {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = "New Password"
-                )
-
-                // Password
+                Text(text = "New Password")
                 TextField(
                     value = password,
                     onValueChange = { password = it },
@@ -180,12 +187,7 @@ fun RegisterScreen(
             item { Spacer(modifier = Modifier.height(16.dp)) }
 
             item {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = "Confirm Password"
-                )
-
-                // Confirm password
+                Text(text = "Confirm Password")
                 TextField(
                     value = confirmPassword,
                     onValueChange = { confirmPassword = it },
@@ -211,16 +213,9 @@ fun RegisterScreen(
 
             item { Spacer(modifier = Modifier.height(16.dp)) }
 
-            // Terms & Conditions
             item {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-
-                    Checkbox(
-                        checked = checked,
-                        onCheckedChange = { checked = it }
-                    )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Checkbox(checked = checked, onCheckedChange = { checked = it })
                     Text(text = "Agree with ")
                     Text(
                         text = "Terms & Condition",
@@ -232,19 +227,20 @@ fun RegisterScreen(
 
             item { Spacer(modifier = Modifier.height(24.dp)) }
 
-            // Register Button
             item {
                 Button(
-                    onClick = { onRegisterClick(name.text,email.text,password.text,confirmPassword.text) },
+                    onClick = { viewModel.signUp(name.text,email.text,password.text,confirmPassword.text) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
                     shape = RoundedCornerShape(25.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF4A46E6) // purple button
-                    )
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4A46E6))
                 ) {
-                    Text(text = "Register", color = Color.White, fontSize = 16.sp)
+                    if (uiState.loading) {
+                        CircularProgressIndicator(color = Color.White, strokeWidth = 2.dp, modifier = Modifier.size(20.dp))
+                    } else {
+                        Text(text = "Register", color = Color.White, fontSize = 16.sp)
+                    }
                 }
             }
 
@@ -271,17 +267,16 @@ fun RegisterScreen(
 
             item { Spacer(modifier = Modifier.height(16.dp)) }
 
-            // Google Login
             item {
                 OutlinedButton(
-                    onClick = { onSignWithGoogleClick() },
+                    onClick = { launcher.launch(googleSignInClient.signInIntent) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
                     shape = RoundedCornerShape(25.dp)
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_google), // Add google logo in drawable
+                        painter = painterResource(id = R.drawable.ic_google),
                         contentDescription = "Google",
                         tint = Color.Unspecified,
                         modifier = Modifier.size(20.dp)
@@ -303,22 +298,17 @@ fun RegisterScreen(
                         text = "Log In",
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier
-                            .clickable(onClick = onLogInClick)
+                        modifier = Modifier.clickable { onNavigateToLogin() }
                     )
+                }
+            }
+
+            // Show error if exists
+            item {
+                uiState.error?.let { error ->
+                    Text(text = error, color = Color.Red, modifier = Modifier.padding(top = 8.dp))
                 }
             }
         }
     }
-}
-
-@Preview(showSystemUi = true)
-@Composable
-fun RegisterScreenPreview() {
-    RegisterScreen(
-        onLogInClick = {},
-        onBackClick = {},
-        onRegisterClick = {_,_,_,_ ->},
-        onSignWithGoogleClick = {}
-    )
 }

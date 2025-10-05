@@ -6,11 +6,15 @@ import com.example.medicine_reminder.data.api.ApiService
 import com.example.medicine_reminder.data.local.TokenManager
 import com.example.medicine_reminder.model.GoogleLoginRequest
 import com.example.medicine_reminder.model.SignUpRequest
+import com.example.medicine_reminder.ui.signup.CreateAccountUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
+
 
 @HiltViewModel
 class CreateAccountViewModel @Inject constructor(
@@ -18,67 +22,66 @@ class CreateAccountViewModel @Inject constructor(
     private val tokenManager: TokenManager
 ) : ViewModel() {
 
-    fun signUp(
-        name: String,
-        email: String,
-        password: String,
-        confirmPassword: String,
-        onSuccess: () -> Unit,
-        onError: (String) -> Unit
-    ) {
+    private val _uiState = MutableStateFlow(CreateAccountUiState())
+    val uiState: StateFlow<CreateAccountUiState> = _uiState
+
+    /** Reset state after navigation or showing error */
+    fun resetState() {
+        _uiState.value = CreateAccountUiState()
+    }
+
+    /** Sign up with email/password */
+    fun signUp(name: String, email: String, password: String, confirmPassword: String) {
         if (name.isBlank() || email.isBlank() || password.isBlank() || confirmPassword.isBlank()) {
-            onError("All fields are required")
+            _uiState.value = CreateAccountUiState(error = "All fields are required")
             return
         }
 
         if (password != confirmPassword) {
-            onError("Passwords do not match")
+            _uiState.value = CreateAccountUiState(error = "Passwords do not match")
             return
         }
 
         viewModelScope.launch {
+            _uiState.value = CreateAccountUiState(loading = true)
             try {
                 val request = SignUpRequest(name, email, password)
                 val response = api.signUp(request)
-
                 if (response.isSuccessful && response.body() != null) {
-                    // If backend returns a token, save it
                     response.body()?.token?.let { token ->
                         tokenManager.saveToken(token)
                     }
-                    onSuccess()
+                    _uiState.value = CreateAccountUiState(success = true)
                 } else {
-                    onError("Signup failed: ${response.errorBody()?.string() ?: "Unknown error"}")
+                    val errorMsg = response.errorBody()?.string() ?: "Unknown error"
+                    _uiState.value = CreateAccountUiState(error = "Signup failed: $errorMsg")
                 }
             } catch (e: IOException) {
-                onError("Network error: ${e.message}")
+                _uiState.value = CreateAccountUiState(error = "Network error: ${e.message}")
             } catch (e: HttpException) {
-                onError("Server error: ${e.message}")
+                _uiState.value = CreateAccountUiState(error = "Server error: ${e.message}")
             }
         }
     }
-    fun googleLogin(
-        email: String?,
-        idToken: String,
-        onSuccess: () -> Unit,
-        onError: (String) -> Unit
-    ) {
+
+    /** Google login */
+    fun googleLogin(email: String?, idToken: String) {
         viewModelScope.launch {
+            _uiState.value = CreateAccountUiState(loading = true)
             try {
                 val request = GoogleLoginRequest(email, idToken)
                 val response = api.googleLogin(request)
-
                 if (response.isSuccessful && response.body() != null) {
                     val token = response.body()!!.token
                     tokenManager.saveToken(token)
-                    onSuccess()
+                    _uiState.value = CreateAccountUiState(success = true)
                 } else {
-                    onError("Google login failed")
+                    _uiState.value = CreateAccountUiState(error = "Google login failed")
                 }
             } catch (e: IOException) {
-                onError("Network error: ${e.message}")
+                _uiState.value = CreateAccountUiState(error = "Network error: ${e.message}")
             } catch (e: HttpException) {
-                onError("Server error: ${e.message}")
+                _uiState.value = CreateAccountUiState(error = "Server error: ${e.message}")
             }
         }
     }

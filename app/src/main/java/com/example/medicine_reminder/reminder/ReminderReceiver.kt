@@ -5,6 +5,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.PowerManager
+import android.util.Log
+import com.example.medicine_reminder.data.local.Repository
 import com.example.medicine_reminder.utils.AlarmPlayer
 import com.example.medicine_reminder.data.repository.ReminderRepository
 import com.example.medicine_reminder.ui.alarm.AlarmActivity
@@ -22,45 +24,63 @@ class ReminderReceiver : BroadcastReceiver() {
     lateinit var alarmPlayer: AlarmPlayer
 
     @Inject
-    lateinit var repository: ReminderRepository
+    lateinit var reminderRepository: ReminderRepository
+
+    @Inject
+    lateinit var scheduler: ReminderScheduler
+
+    @Inject
+    lateinit var repository: Repository
 
     override fun onReceive(context: Context, intent: Intent) {
         val pendingResult = goAsync()
+        val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+        val wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MedicineReminder:WakeLock")
+        wl.acquire(10_000L) // hold for 10s
+
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val reminderId = intent.getIntExtra("reminderId", 0)
                 val medicineName = intent.getStringExtra("medicineName") ?: "your medicine"
 
-                when (intent.action) {
-                    ACTION_FIRE -> {
-                        if (isPhoneLocked(context) || isDeviceIdle(context)) {
-                            val alarmIntent = Intent(context, AlarmActivity::class.java).apply {
-                                flags =
-                                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                            }
-                            context.startActivity(alarmIntent)
+                if (intent.action == ACTION_FIRE) {
+                    // Only launch AlarmActivity if screen is off / device idle
+                    if (isPhoneLocked(context) || isDeviceIdle(context)) {
+                        Log.d("receiver","onReceiver called")
 
-                        } else {
-                            alarmPlayer.startAlarm()
-                            NotificationHelper.showAlarmNotification(
-                                context,
-                                reminderId,
-                                medicineName
-                            )
+                        // Check if activity is already running
+                        val launchIntent = Intent(context, AlarmActivity::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                            putExtra("reminderId", reminderId)
+                            putExtra("medicineName", medicineName)
                         }
+                        context.startActivity(launchIntent)
+                    } else {
+                        // Device active → just notify & play alarm sound
+                        NotificationHelper.showAlarmNotification(context, reminderId, medicineName)
+                        alarmPlayer.startAlarm()
                     }
+                }
 
+
+
+                when(intent.action) {
                     ACTION_SNOOZE -> {
-                        repository.scheduleSnooze(reminderId, medicineName)
+                        reminderRepository.scheduleSnooze(reminderId, medicineName)
                         alarmPlayer.stopAlarm()
                     }
-
                     ACTION_DISMISS -> {
-                        repository.dismiss(reminderId)
+                        val reminder = repository.getReminderById(reminderId) ?: return@launch
+                        val medicine = repository.getMedicineById(reminder.medicineOwnerId)
+                        if (medicine != null) {
+                            scheduler.rescheduleReminderForNextDay(medicine, reminder)
+                            reminderRepository.dismiss(reminderId)
+                        }
                         alarmPlayer.stopAlarm()
                     }
                 }
             } finally {
+                wl.release()
                 pendingResult.finish()
             }
         }

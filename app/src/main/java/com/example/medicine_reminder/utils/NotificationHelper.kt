@@ -17,7 +17,6 @@ object NotificationHelper {
     fun showAlarmNotification(context: Context, reminderId: Int, medicineName: String) {
         val dismissPI = actionBroadcastPI(context, reminderId, ReminderReceiver.ACTION_DISMISS)
         val snoozePI = actionBroadcastPI(context, reminderId, ReminderReceiver.ACTION_SNOOZE)
-        val alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
 
         val notification = NotificationCompat.Builder(context, "reminder_channel")
             .setSmallIcon(R.drawable.ic_launcher_foreground)
@@ -25,7 +24,6 @@ object NotificationHelper {
             .setContentText("Time to take $medicineName")
             .setCategory(NotificationCompat.CATEGORY_ALARM)
             .setPriority(NotificationCompat.PRIORITY_MAX)
-            .setSound(alarmSound)
             .setVibrate(longArrayOf(0, 1000, 500, 1000))
             .setFullScreenIntent(
                 PendingIntent.getActivity(

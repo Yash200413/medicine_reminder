@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.PowerManager
 import android.provider.Settings
 import androidx.appcompat.app.AlertDialog
+import androidx.core.net.toUri
 
 object AlarmPermissionHelper {
 
@@ -46,7 +47,7 @@ object AlarmPermissionHelper {
     private fun requestExactAlarms(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
-                data = Uri.parse("package:${context.packageName}")
+                data = "package:${context.packageName}".toUri()
             }
             context.startActivity(intent)
         }

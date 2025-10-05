@@ -42,7 +42,9 @@ object AppModule {
         logHistoryDao: LogHistoryDao
     ): Repository = Repository(medicineDao, reminderDao, logHistoryDao)
 
-    @Provides @Singleton
+
+    @Provides
+    @Singleton
     fun provideScheduler(@ApplicationContext context: Context): ReminderScheduler =
         ReminderScheduler(context)
 }
