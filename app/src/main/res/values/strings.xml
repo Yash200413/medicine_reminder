@@ -38,7 +38,7 @@
     <string name="title_activity_home">HomeActivity</string>
     <string name="title_activity_create_account">CreateAccountActivity</string>
     <string name="title_activity_add_medicine">AddMedicineActivity</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Medicine Reminder</string>
     <!--    <string-array name="spiner_items">-->
     <!--        <item>Male</item>-->
     <!--        <item>Female</item>-->
