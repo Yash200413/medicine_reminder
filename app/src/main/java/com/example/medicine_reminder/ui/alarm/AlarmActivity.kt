@@ -1,11 +1,10 @@
 package com.example.medicine_reminder.ui.alarm
 
-import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import com.example.medicine_reminder.reminder.ReminderReceiver
 import com.example.medicine_reminder.viewmodel.AlarmViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -13,22 +12,46 @@ import dagger.hilt.android.AndroidEntryPoint
 class AlarmActivity : ComponentActivity() {
 
     private val viewModel: AlarmViewModel by viewModels()
+    private val TAG = "AlarmActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val reminderId = intent.getIntExtra("reminderId", 0)
-        val medicineName = intent.getStringExtra("medicineName") ?: "your medicine"
+        try {
+            val reminderId = intent.getIntExtra("reminderId", 0)
+            val medicineName = intent.getStringExtra("medicineName") ?: "your medicine"
 
-        viewModel.startAlarm()
+            Log.d(TAG, "AlarmActivity started for reminderId=$reminderId, medicineName=$medicineName")
 
-        setContent {
-            AlarmScreen(
-                medicineName = medicineName,
-                onDismiss = { viewModel.dismiss(reminderId); finish() },
-                onSnooze = { viewModel.snooze(reminderId, medicineName); finish() }
-            )
+            Log.d(TAG, "Alarm started successfully")
+
+            setContent {
+                AlarmScreen(
+                    medicineName = medicineName,
+                    onDismiss = {
+                        try {
+                            viewModel.dismiss(reminderId)
+                            Log.d(TAG, "Alarm dismissed for reminderId=$reminderId")
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Error dismissing alarm", e)
+                        }
+                        finish()
+                    },
+                    onSnooze = {
+                        try {
+                            viewModel.snooze(reminderId, medicineName)
+                            Log.d(TAG, "Alarm snoozed for reminderId=$reminderId")
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Error snoozing alarm", e)
+                        }
+                        finish()
+                    }
+                )
+            }
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Error in AlarmActivity onCreate", e)
+            finish() // close activity if something goes wrong
         }
     }
 }
-

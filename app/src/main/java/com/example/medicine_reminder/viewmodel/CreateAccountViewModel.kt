@@ -73,7 +73,9 @@ class CreateAccountViewModel @Inject constructor(
                 val response = api.googleLogin(request)
                 if (response.isSuccessful && response.body() != null) {
                     val token = response.body()!!.token
+                    val name = response.body()!!.name
                     tokenManager.saveToken(token)
+                    tokenManager.saveUserName(name)
                     _uiState.value = CreateAccountUiState(success = true)
                 } else {
                     _uiState.value = CreateAccountUiState(error = "Google login failed")

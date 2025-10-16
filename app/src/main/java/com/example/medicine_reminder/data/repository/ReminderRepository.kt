@@ -1,10 +1,12 @@
 package com.example.medicine_reminder.data.repository
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationManagerCompat
+import com.example.medicine_reminder.reminder.AlarmService
 import com.example.medicine_reminder.reminder.ReminderReceiver
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -14,6 +16,7 @@ import javax.inject.Singleton
 class ReminderRepository @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
+    @SuppressLint("ScheduleExactAlarm")
     fun scheduleSnooze(reminderId: Int, medicineName: String) {
         val am = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val snoozeAt = System.currentTimeMillis() + 10 * 60 * 1000L
@@ -22,9 +25,9 @@ class ReminderRepository @Inject constructor(
             context,
             reminderId,
             Intent(context, ReminderReceiver::class.java).apply {
-                action = ReminderReceiver.ACTION_FIRE
-                putExtra("reminderId", reminderId)
-                putExtra("medicineName", medicineName)
+               action = AlarmService.ACTION_FIRE
+               putExtra("reminderId", reminderId)
+               putExtra("medicineName", medicineName)
             },
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )

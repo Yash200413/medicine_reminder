@@ -1,5 +1,6 @@
 package com.example.medicine_reminder.reminder
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
@@ -33,13 +34,14 @@ class ReminderScheduler @Inject constructor(
     }
 
     /**
-     * Ensures reminders only trigger inside medicine start/finish window.
+     * Schedule next reminder within medicine window using setAlarmClock().
      */
+    @SuppressLint("ScheduleExactAlarm")
     fun scheduleNextIfInWindow(med: Medicine, rem: Reminder) {
         val now = System.currentTimeMillis()
         if (!TimeUtils.isWithinWindow(now, med.startDate, med.finishDate)) return
 
-        // Cancel any existing pending intent
+        // Cancel any existing alarm
         cancelReminder(rem.reminderId)
 
         val triggerAt = TimeUtils.nextTriggerForTodayOrTomorrow(rem.time, now)
@@ -51,20 +53,19 @@ class ReminderScheduler @Inject constructor(
             medicineName = med.name
         )
 
-        alarmManager.setExactAndAllowWhileIdle(
-            AlarmManager.RTC_WAKEUP,
-            triggerAt,
-            pi
-        )
-        Log.d("reminder","reminder scheduled1")
+        // Use setAlarmClock instead of setExactAndAllowWhileIdle
+        val alarmInfo = AlarmManager.AlarmClockInfo(triggerAt, pi)
+        alarmManager.setAlarmClock(alarmInfo, pi)
+
+        Log.d("ReminderScheduler", "AlarmClock scheduled for ${med.name} at ${TimeUtils.formatMillis(triggerAt)}")
     }
 
+    @SuppressLint("ScheduleExactAlarm")
     fun rescheduleReminderForNextDay(med: Medicine, rem: Reminder) {
-        // Compute next day trigger
-        val nextDay = System.currentTimeMillis() + 24 * 60 * 60 * 1000 // +1 day in millis
-        if (nextDay !in med.startDate..med.finishDate) return // outside course, do nothing
+        val nextDay = System.currentTimeMillis() + 24 * 60 * 60 * 1000 // +1 day
+        if (nextDay !in med.startDate..med.finishDate) return
 
-        val triggerAt = TimeUtils.nextTriggerForTomorrow(rem.time) // your util function
+        val triggerAt = TimeUtils.nextTriggerForTomorrow(rem.time)
 
         cancelReminder(rem.reminderId)
 
@@ -75,14 +76,11 @@ class ReminderScheduler @Inject constructor(
             medicineName = med.name
         )
 
-        alarmManager.setExactAndAllowWhileIdle(
-            AlarmManager.RTC_WAKEUP,
-            triggerAt,
-            pi
-        )
-        Log.d("reminder","reminder scheduled2")
-    }
+        val alarmInfo = AlarmManager.AlarmClockInfo(triggerAt, pi)
+        alarmManager.setAlarmClock(alarmInfo, pi)
 
+        Log.d("ReminderScheduler", "AlarmClock rescheduled for next day ${med.name} at ${TimeUtils.formatMillis(triggerAt)}")
+    }
 
     /**
      * Create PendingIntent that always fires ACTION_FIRE → ReminderReceiver → AlarmActivity
@@ -94,7 +92,7 @@ class ReminderScheduler @Inject constructor(
         medicineName: String?
     ): PendingIntent {
         val intent = Intent(context, ReminderReceiver::class.java).apply {
-            action = ReminderReceiver.ACTION_FIRE
+            action = AlarmService.ACTION_FIRE
             putExtra("medicineId", medicineId)
             putExtra("reminderId", reminderId)
             putExtra("medicineName", medicineName)

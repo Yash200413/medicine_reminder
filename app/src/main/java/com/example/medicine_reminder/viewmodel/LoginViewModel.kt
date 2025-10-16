@@ -24,6 +24,9 @@ class LoginViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState
 
+    init {
+        checkForJwtAndLogin()
+    }
     /** Reset state after navigation or showing error */
     fun resetState() {
         _uiState.value = LoginUiState()
@@ -43,8 +46,10 @@ class LoginViewModel @Inject constructor(
                 val response = api.login(request)
 
                 val token = response.body()?.token
-                if (response.isSuccessful && !token.isNullOrEmpty()) {
+                val name = response.body()?.name
+                if (response.isSuccessful && !token.isNullOrEmpty()&& !name.isNullOrEmpty()) {
                     tokenManager.saveToken(token)
+                    tokenManager.saveUserName(name)
                     _uiState.value = LoginUiState(success = true)
                 } else {
                     val errorMsg = response.body()?.token ?: response.errorBody()?.string() ?: "Invalid credentials"
@@ -72,8 +77,10 @@ class LoginViewModel @Inject constructor(
                 val response = api.googleLogin(request)
 
                 val token = response.body()?.token
-                if (response.isSuccessful && !token.isNullOrEmpty()) {
+                val name = response.body()?.name
+                if (response.isSuccessful && !token.isNullOrEmpty() && !name.isNullOrEmpty()) {
                     tokenManager.saveToken(token)
+                    tokenManager.saveUserName(name)
                     _uiState.value = LoginUiState(success = true)
                 } else {
                     val errorMsg = response.body()?.token ?: response.errorBody()?.string() ?: "Google login failed"

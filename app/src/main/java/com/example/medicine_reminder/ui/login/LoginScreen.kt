@@ -98,7 +98,7 @@ fun LoginScreen(
             viewModel.resetState()
         }
     }
-//    onNavigateToHome()
+  onNavigateToHome()
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var showPassword by remember { mutableStateOf(false) }
