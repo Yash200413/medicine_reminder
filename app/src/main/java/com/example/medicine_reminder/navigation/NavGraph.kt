@@ -1,47 +1,22 @@
 package com.example.medicine_reminder.navigation
 
 import android.app.Activity
-import android.content.Intent
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.medicine_reminder.R
-import com.example.medicine_reminder.data.local.TokenManager
 import com.example.medicine_reminder.ui.forgotpassword.ChangePasswordScreen
 import com.example.medicine_reminder.ui.forgotpassword.ForgotPasswordScreen
 import com.example.medicine_reminder.ui.home.AddMedicineScreen
 import com.example.medicine_reminder.ui.home.MainScreen
-import com.example.medicine_reminder.ui.home.MedicineReminderScreen
-import com.example.medicine_reminder.ui.home.MoreScreen
-import com.example.medicine_reminder.ui.home.ProgressScreen
 import com.example.medicine_reminder.ui.login.LoginScreen
-import com.example.medicine_reminder.ui.signup.RegisterScreen
 import com.example.medicine_reminder.ui.otp.OtpVerificationPage
-import com.example.medicine_reminder.uicomponents.HamburgerDropdownMenu
+import com.example.medicine_reminder.ui.signup.RegisterScreen
 import com.example.medicine_reminder.viewmodel.LoginViewModel
 import com.example.medicine_reminder.viewmodel.OtpVerificationViewModel
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 
 @Composable
 fun SetupNavGraph(
@@ -181,7 +156,13 @@ fun SetupNavGraph(
 //        }
 
         composable(route = Screen.Main.route) {
-            MainScreen (
+            MainScreen(
+                onLogOutClicked = {
+                    tokenManager.clearToken()
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.Home.route) { inclusive = true }
+                    }
+                },
                 onMenuOptionSelected = { option ->
                     when (option) {
                         "Add Medicine" -> navController.navigate(Screen.AddMedicine.route)

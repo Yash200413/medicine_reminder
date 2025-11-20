@@ -122,7 +122,7 @@ fun RegisterScreen(
 
             item {
                 Text(
-                    text = "Lorem Ipsum is simply dummy text of text has been the industry's standard",
+                    text = "Create your account to save your medicines, receive reminders, and keep your health on track",
                     fontSize = 14.sp,
                     color = Color.Gray,
                     textAlign = TextAlign.Center

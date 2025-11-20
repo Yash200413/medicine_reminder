@@ -98,7 +98,7 @@ fun LoginScreen(
             viewModel.resetState()
         }
     }
-  onNavigateToHome()
+//  onNavigateToHome()
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var showPassword by remember { mutableStateOf(false) }
@@ -182,7 +182,7 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // 🔹 Login Button
+            //  Login Button
             Button(
                 onClick = { viewModel.login(email, password) },
                 shape = RoundedCornerShape(25.dp),
@@ -222,7 +222,7 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 🔹 Google Login
+            // Google Login
             OutlinedButton(
                 onClick = {
                     launcher.launch(googleSignInClient.signInIntent)
@@ -260,14 +260,14 @@ fun LoginScreen(
                 )
             }
 
-            // 🔹 Error Message
-            uiState.error?.let { error ->
-                Text(
-                    text = error,
-                    color = Color.Red,
-                    modifier = Modifier.padding(top = 8.dp)
-                )
-            }
+            //  Error Message
+//            uiState.error?.let { error ->
+//                Text(
+//                    text = error,
+//                    color = Color.Red,
+//                    modifier = Modifier.padding(top = 8.dp)
+//                )
+//            }
         }
     }
 }

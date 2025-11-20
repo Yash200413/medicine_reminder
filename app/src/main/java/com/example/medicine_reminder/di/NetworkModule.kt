@@ -17,7 +17,7 @@ import javax.inject.Singleton
 object NetworkModule {
 
     private const val BASE_URL =
-        "https://probable-humbly-mako.ngrok-free.app/" // same as before
+        "https://demo-dggw.onrender.com/" // same as before
 
     @Provides
     @Singleton
