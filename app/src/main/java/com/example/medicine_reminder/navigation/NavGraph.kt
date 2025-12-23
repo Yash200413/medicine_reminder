@@ -23,14 +23,15 @@ fun SetupNavGraph(
     navController: NavHostController,
     activity: Activity
 ) {
-    val tokenManager = androidx.hilt.navigation.compose.hiltViewModel<LoginViewModel>().tokenManager
+    val tokenManager = hiltViewModel<LoginViewModel>().tokenManager
+
     NavHost(
         navController = navController,
         startDestination = Screen.Login.route
     ) {
 
         /** LOGIN SCREEN */
-        composable(route = Screen.Login.route) {
+        composable(Screen.Login.route) {
             LoginScreen(
                 onNavigateToHome = {
                     navController.navigate(Screen.Main.route) {
@@ -43,14 +44,17 @@ fun SetupNavGraph(
         }
 
         /** REGISTER SCREEN */
-        composable(route = Screen.Signup.route) {
+        composable(Screen.Signup.route) {
             RegisterScreen(
                 onBackClick = { navController.popBackStack() },
+
+                // FIXED: After registering → go to LOGIN screen
                 onNavigateToHome = {
-                    navController.navigate(Screen.Home.route) {
+                    navController.navigate(Screen.Login.route) {
                         popUpTo(Screen.Signup.route) { inclusive = true }
                     }
                 },
+
                 onNavigateToLogin = {
                     navController.navigate(Screen.Login.route) {
                         popUpTo(Screen.Signup.route) { inclusive = true }
@@ -63,18 +67,14 @@ fun SetupNavGraph(
         composable(
             route = "${Screen.OtpVerification.route}/{email}",
             arguments = listOf(navArgument("email") { type = NavType.StringType })
-        ) { backStackEntry ->
-
+        ) { entry ->
             val viewModel: OtpVerificationViewModel = hiltViewModel()
-            val email = backStackEntry.arguments?.getString("email") ?: ""
+            val email = entry.arguments?.getString("email") ?: ""
 
             OtpVerificationPage(
                 email = email,
-                onBackClick = {
-                    navController.popBackStack()
-                },
+                onBackClick = { navController.popBackStack() },
                 onOtpVerified = {
-                    // ✅ Use createRoute to pass email forward
                     navController.navigate(Screen.ChangePassword.createRoute(email)) {
                         popUpTo(Screen.OtpVerification.route) { inclusive = true }
                     }
@@ -83,13 +83,12 @@ fun SetupNavGraph(
             )
         }
 
-
         /** CHANGE PASSWORD */
         composable(
-            route = "${Screen.ChangePassword.route}/{email}",
+            "${Screen.ChangePassword.route}/{email}",
             arguments = listOf(navArgument("email") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val email = backStackEntry.arguments?.getString("email") ?: ""
+        ) { entry ->
+            val email = entry.arguments?.getString("email") ?: ""
 
             ChangePasswordScreen(
                 email = email,
@@ -102,9 +101,8 @@ fun SetupNavGraph(
             )
         }
 
-
         /** FORGOT PASSWORD */
-        composable(route = Screen.ForgotPassword.route) {
+        composable(Screen.ForgotPassword.route) {
             ForgotPasswordScreen(
                 onBackClick = { navController.popBackStack() },
                 onNavigateToOtp = { email ->
@@ -113,78 +111,37 @@ fun SetupNavGraph(
             )
         }
 
-        /** HOME SCREEN */
-//        composable(route = Screen.Home.route) {
-//            MedicineReminderScreen(
-//                onMenuOptionSelected = { option ->
-//                    when(option) {
-//                        "Add Medicine" -> navController.navigate(Screen.AddMedicine.route)
-//                        "Logout" -> {
-//                            // Clear JWT / token if you have a login token manager
-//                            tokenManager.clearToken()
-//                            navController.navigate(Screen.Login.route) {
-//                                popUpTo(Screen.Home.route) { inclusive = true }
-//                            }
-//                        }
-//                        "Setting" -> {
-//                            // Navigate to settings screen if you create one
-////                            navController.navigate(Screen.Settings.route)
-//                        }
-//                    }
-//                }
-//            )
-//
-//        }
-
-        /** ADD MEDICINE */
-        composable(route = Screen.AddMedicine.route) {
+        /** ADD MEDICINE SCREEN */
+        composable(Screen.AddMedicine.route) {
             AddMedicineScreen(
                 onBackClick = { navController.popBackStack() },
-                makeScheduleClick = { name, strength, type, amount, start, finish, reminders ->
-                    // Save medicine via ViewModel
+                makeScheduleClick = { _, _, _, _, _, _, _ ->
                     navController.popBackStack()
                 }
             )
         }
 
-//        composable(route = Screen.Progress.route) {
-//            ProgressScreen()
-//        }
-//
-//        composable(route = Screen.More.route) {
-//            MoreScreen()
-//        }
-
-        composable(route = Screen.Main.route) {
+        /** MAIN SCREEN */
+        composable(Screen.Main.route) {
             MainScreen(
                 onLogOutClicked = {
                     tokenManager.clearToken()
                     navController.navigate(Screen.Login.route) {
-                        popUpTo(Screen.Home.route) { inclusive = true }
+                        popUpTo(Screen.Main.route) { inclusive = true }
                     }
                 },
                 onMenuOptionSelected = { option ->
                     when (option) {
                         "Add Medicine" -> navController.navigate(Screen.AddMedicine.route)
                         "Logout" -> {
-                            // Clear JWT / token if you have a login token manager
-
                             tokenManager.clearToken()
                             navController.navigate(Screen.Login.route) {
-                                popUpTo(Screen.Home.route) { inclusive = true }
+                                popUpTo(Screen.Main.route) { inclusive = true }
                             }
-                        }
-
-                        "Setting" -> {
-                            // Navigate to settings screen if you create one
-//                            navController.navigate(Screen.Settings.route)
                         }
                     }
                 }
             )
         }
-
-
     }
 }
-

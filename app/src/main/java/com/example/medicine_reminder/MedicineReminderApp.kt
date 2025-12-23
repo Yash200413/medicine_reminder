@@ -18,7 +18,7 @@ class MedicineReminderApp : Application() {
 
 
     override fun onCreate() {
-        Log.d("AppTime", "Application onCreate: ${System.currentTimeMillis()}")
+//        Log.d("AppTime", "Application onCreate: ${System.currentTimeMillis()}")
         super.onCreate()
 
         // Run channel creation in a background thread to avoid ANR
@@ -33,11 +33,11 @@ class MedicineReminderApp : Application() {
             val channelName = "Medicine Reminders"
             val description = "Reminders for taking your medicines"
 
-            val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
-            val attributes = AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_ALARM)
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .build()
+//            val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
+//            val attributes = AudioAttributes.Builder()
+//                .setUsage(AudioAttributes.USAGE_ALARM)
+//                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+//                .build()
 
             val channel = NotificationChannel(
                 channelId,
@@ -48,7 +48,7 @@ class MedicineReminderApp : Application() {
                 lockscreenVisibility = Notification.VISIBILITY_PUBLIC
                 enableVibration(true)
                 enableLights(true)
-                setSound(soundUri, attributes)
+//                setSound(soundUri, attributes)
             }
 
             val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
